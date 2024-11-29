@@ -74,17 +74,18 @@ public class CarController : MonoBehaviour
         float parabolicInput = currentSteeringInput * Mathf.Abs(currentSteeringInput);
 
         // Calculate steering angle and drift effect
-        float driftSteering = parabolicInput * steeringAngle * Time.deltaTime * _moveVec.magnitude;
-        Vector3 driftVec = Quaternion.AngleAxis(driftSteering * driftFactor, Vector3.up) * _moveVec;
+        float driftSteering = parabolicInput * steeringAngle * _moveVec.magnitude;
+        Vector3 driftVec = Quaternion.AngleAxis(driftSteering * driftFactor * Time.deltaTime, Vector3.up) * _moveVec;
+
         transform.position += driftVec * Time.deltaTime;
 
         // Apply drag to the car's movement
-        _moveVec *= dragAmount;
+        _moveVec *= Mathf.Pow(dragAmount, Time.deltaTime); // Adjust drag to be time-dependent
         _moveVec = Vector3.Lerp(_moveVec.normalized, transform.forward, tractionForce * Time.deltaTime) * _moveVec.magnitude;
 
         // Update wheels rotation based on the calculated steering
         _rotateVec.y = Mathf.Clamp(parabolicInput * steeringAngle, -steeringAngle, steeringAngle);
-        transform.Rotate(Vector3.up * driftSteering);
+        transform.Rotate(Vector3.up * driftSteering * Time.deltaTime); // Adjust rotation speed with deltaTime
         leftWheel.localRotation = Quaternion.Euler(_rotateVec);
         rightWheel.localRotation = Quaternion.Euler(_rotateVec);
     }

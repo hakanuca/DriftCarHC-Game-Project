@@ -10,7 +10,7 @@ public class CarController : MonoBehaviour
     [SerializeField] float dragAmount = 0.95f;
     [SerializeField] float tractionForce = 1f;
     [SerializeField] float driftFactor = 0.9f;
-    [SerializeField] float steeringSpeed = 2f; // Speed at which steering angle increases
+    [SerializeField] float steeringSpeed = 2f; 
     private float currentSteeringInput = 0f;
 
     Vector3 _moveVec;

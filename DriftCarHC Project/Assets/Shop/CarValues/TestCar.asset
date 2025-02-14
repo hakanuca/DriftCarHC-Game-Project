@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 027140bb90d3a414cb98f785d5d3d0b9, type: 3}
+  m_Name: TestCar
+  m_EditorClassIdentifier: 
+  cars:
+  - carSpeed: 20
+    maxSpeed: 35
+    steeringAngle: 5
+    dragAmount: 0.5
+    tractionForce: 0.4
+    driftFactor: 1.5
+    steeringSpeed: 2
+    isBought: 0
+    angleThreshold: 30
+  - carSpeed: 25
+    maxSpeed: 40
+    steeringAngle: 7
+    dragAmount: 0.5
+    tractionForce: 0.3
+    driftFactor: 2
+    steeringSpeed: 3
+    isBought: 0
+    angleThreshold: 60
+  carControllers:
+  - {fileID: 0}
+  - {fileID: 0}
+  defaultCarModel: {fileID: 0}
+  defaultCarController: {fileID: 0}

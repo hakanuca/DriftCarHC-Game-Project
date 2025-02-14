@@ -11924,12 +11924,12 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1695105099}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f8818f5c0473e7e43b7303e1efc0313a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerTransform: {fileID: 0}
+  playerTransform: {fileID: 1853973690}
   offset: {x: 0, y: 20, z: -25}
   lookAtOffset: {x: 0, y: 0, z: 0}
 --- !u!81 &1695105101
@@ -12724,7 +12724,7 @@ MonoBehaviour:
   carSpeed: 20
   maxSpeed: 10
   steeringAngle: 5
-  dragAmount: 0.99
+  dragAmount: 0.5
   tractionForce: 0.5
   driftFactor: 0.9
   steeringSpeed: 2

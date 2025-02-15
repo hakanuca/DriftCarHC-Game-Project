@@ -1,29 +1,62 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "Shop", menuName = "Shop/Car")]
-public class Shop : ScriptableObject
+public class Shop : MonoBehaviour
 {
-    public Car[] cars;
-    public CarController[] carControllers;
-    public GameObject defaultCarModel;
-    public CarController defaultCarController;
+    public CarData[] cars; 
+    public CarManager carManager; 
+    public int selectedCarIndex = 0; 
 
-    public int CarsCount => cars.Length;
+    private int[] boughtCars; 
 
-    public CarController GetCar(int index) => carControllers[index];
+    void Start()
+    {
+        if (cars.Length == 0)
+        {
+            return;
+        }
+
+        boughtCars = new int[cars.Length]; 
+        LoadDefaultCar();
+    }
+
+    public bool IsCarBought(int index)
+    {
+        return boughtCars[index] == 1;
+    }
 
     public void BuyCar(int index)
     {
-        carControllers[index].isBought = true;
-        UpdateDefaultCar(index);
+        if (!IsCarBought(index))
+        {
+            boughtCars[index] = 1; 
+            SelectCar(index);
+        }
     }
 
-    private void UpdateDefaultCar(int index)
+    public void SelectCar(int index)
     {
-        // Update the default car's 3D model
-        defaultCarModel = carControllers[index].gameObject;
+        if (index < 0 || index >= cars.Length)
+        {
+            return;
+        }
 
-        // Update the default car's controller stats
-        defaultCarController.InitializeFromCar(cars[index]);
+        selectedCarIndex = index;
+
+        if (carManager == null)
+        {
+            return;
+        }
+
+        carManager.LoadCar(cars[selectedCarIndex]); // Yeni arabayı yükle
+    }
+
+
+    public void LoadDefaultCar()
+    {
+        if (cars.Length > 0)
+        {
+            selectedCarIndex = 0;
+            carManager.LoadCar(cars[selectedCarIndex]);
+        }
     }
 }

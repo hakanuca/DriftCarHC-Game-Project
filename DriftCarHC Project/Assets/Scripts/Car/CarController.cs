@@ -118,16 +118,4 @@ public class CarController : MonoBehaviour
         _moveVec += transform.forward * carSpeed * Time.deltaTime;
         _moveVec = Vector3.ClampMagnitude(_moveVec, maxSpeed);
     }
-
-    public void InitializeFromCar(Car car)
-    {
-        carSpeed = car.carSpeed;
-        maxSpeed = car.maxSpeed;
-        steeringAngle = car.steeringAngle;
-        dragAmount = car.dragAmount;
-        tractionForce = car.tractionForce;
-        driftFactor = car.driftFactor;
-        steeringSpeed = car.steeringSpeed;
-        isBought = car.isBought;
-    }
 }

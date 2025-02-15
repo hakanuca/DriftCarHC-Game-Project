@@ -10,17 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 96e7e616e15cace4cac218945e9d131d, type: 3}
-  m_Name: TestCar
+  m_Name: Test1Car
   m_EditorClassIdentifier: 
-  carName: Pipi
-  carModelPrefab: {fileID: 1593205320559111587, guid: fe7ab6efacb88ee4e821d117d3c1c3ab, type: 3}
-  carSpeed: 25
-  maxSpeed: 40
-  steeringAngle: 7
-  dragAmount: 0.5
-  tractionForce: 0.3
-  driftFactor: 2
-  steeringSpeed: 3
+  carName: ninniiri ninni
+  carModelPrefab: {fileID: 354459505061167262, guid: 776ba304a8e6b1f46a5b51457cd52070, type: 3}
+  carSpeed: 0
+  maxSpeed: 0
+  steeringAngle: 0
+  dragAmount: 0
+  tractionForce: 0
+  driftFactor: 0
+  steeringSpeed: 0
   isBought: 0
-  angleThreshold: 30
-  price: 100
+  angleThreshold: 0
+  price: 0

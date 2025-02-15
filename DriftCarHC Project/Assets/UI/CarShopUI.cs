@@ -1,7 +1,5 @@
 using TMPro;
 using UnityEngine;
-using UnityEngine.Events;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public class CarShopUI : MonoBehaviour
@@ -16,71 +14,61 @@ public class CarShopUI : MonoBehaviour
     [SerializeField] private Image carPowerFill;
     [SerializeField] private Button carPurchaseButton;
 
-    [Space(20f)] 
-    [SerializeField] private Button itemButton;
-    [SerializeField] private Image itemImage;
-    [SerializeField] private Outline itemOutline;
+    [SerializeField] private Shop shop; 
     
-    public void SetItemPosition(Vector2 position)
+    private int selectedCarIndex = 0;
+
+    private void Start()
     {
-        GetComponent<RectTransform>().anchoredPosition += position;
+        LoadCarData(selectedCarIndex);
     }
-    
-    public void SetCarImage(GameObject gameObject)
+
+    public void LoadCarData(int carIndex)
     {
-        carFigure.gameObject.SetActive(true);
+        selectedCarIndex = carIndex;
+        CarData car = shop.cars[carIndex];
+
+        SetCarName(car.carName);
+        SetCarPrice(car.price);
+        SetCarSpeedFill(car.carSpeed / car.maxSpeed);
+        SetCarPowerFill(car.tractionForce);
+
+        if (shop.IsCarBought(carIndex))
+        {
+            SetCharacterAsPurchased();
+        }
+        else
+        {
+            SetCarPriceButton(true);
+        }
     }
-    
-    public void SetCarName(string name)
+
+    public void BuyCar()
     {
-        carName.text = name;
+        if (!shop.IsCarBought(selectedCarIndex))
+        {
+            shop.BuyCar(selectedCarIndex);
+            SetCharacterAsPurchased();
+        }
     }
-    
-    public void SetCarPrice(int price)
+
+    public void SelectCar()
     {
-        carPrice.text = price.ToString();
+        if (shop.IsCarBought(selectedCarIndex))
+        {
+            shop.SelectCar(selectedCarIndex);
+            LoadCarData(selectedCarIndex);
+        }
     }
-    
-    public void SetCarSpeedFill(float fillAmount)
-    {
-        carSpeedFill.fillAmount = fillAmount;
-    }
-    
-    public void SetCarPowerFill(float fillAmount)
-    {
-        carPowerFill.fillAmount = fillAmount;
-    }
-    
-    public void SetCarPriceButton(bool isInteractable)
-    {
-        carPurchaseButton.interactable = isInteractable;
-    }
+
+    public void SetCarName(string name) => carName.text = name;
+    public void SetCarPrice(int price) => carPrice.text = price.ToString();
+    public void SetCarSpeedFill(float fillAmount) => carSpeedFill.fillAmount = fillAmount;
+    public void SetCarPowerFill(float fillAmount) => carPowerFill.fillAmount = fillAmount;
+    public void SetCarPriceButton(bool isInteractable) => carPurchaseButton.interactable = isInteractable;
 
     public void SetCharacterAsPurchased()
     {
         carPurchaseButton.gameObject.SetActive(false);
-        itemButton.interactable = true;
-        
-        itemImage.color = carSelectedColor;
-    }
-
-    public void OnItemPurchase(int itemIndex, UnityAction<int> action)
-    {
-        carPurchaseButton.onClick.RemoveListener(() => action(itemIndex));
-        carPurchaseButton.onClick.AddListener(() => action(itemIndex));
-    }
-    
-    public void OnItemSelect(int itemIndex, UnityAction<int> action)
-    {                   
-        itemButton.interactable = true;
-        itemButton.onClick.RemoveListener(() => action(itemIndex));
-        itemButton.onClick.AddListener(() => action(itemIndex));
-    }
-    
-    public void SelecItem()
-    {
-        itemOutline.enabled = false;
-        itemImage.color = carSelectedColor;
-        itemButton.interactable = true;
     }
 }

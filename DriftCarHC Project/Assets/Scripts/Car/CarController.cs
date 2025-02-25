@@ -1,121 +1,133 @@
+using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.EventSystems;
 
 public class CarController : MonoBehaviour
 {
-    #region Variables
+    [Header("Control")]
+    public float throttle = 1;
+    public float screenUse = 0.8f;  // How much of the screen to use for turning? max turn is when touch at screenUse of screen width
+    [Header("Body")]
+    public Transform centerOfMass;
+    public Transform groundTrigger;
+    public LayerMask wheelCollidables;
+    public float drag = 1f;
+    [Header("Engine")]
+    public float driveForce = 1;
+    [Header("Suspension and Steering")]
+    public float activeVisualSteeringAngleEffect = 1;
+    public float maxVisualSteeringSpeed = 1;
+    public float maxVisualSteeringAngle = 30;
+    public float maxAngularAcceleration = 30;    // degrees per second
+    public List<Transform> steeringWheels;
+    public List<Transform> driveWheels;
+    private Rigidbody _rb;
+    public float driftAngleThreshold = 10.0f;
 
-    [SerializeField] private float carSpeed;
-    [SerializeField] private float maxSpeed;
-    [SerializeField] private float steeringAngle;
-    [SerializeField] private float dragAmount;
-    [SerializeField] private float tractionForce;
-    [SerializeField] private float driftFactor;
-    [SerializeField] private float steeringSpeed;
-    [SerializeField] private float angleThreshold = 90f; 
-
-    #endregion
-    
-    public bool isBought;
-    private float currentSteeringInput = 0f;
-
-    private Vector3 _moveVec;
-    private Vector3 _rotateVec;
-
-    public Transform leftWheel, rightWheel;
-    [SerializeField] private Button leftButton, rightButton;
-
-    private bool isLeftButtonPressed = false;
-    private bool isRightButtonPressed = false;
-
-    private void Start()
+    void Start()
     {
-        // Set up button events using UI Event Triggers
-        EventTrigger leftTrigger = leftButton.gameObject.AddComponent<EventTrigger>();
-        EventTrigger rightTrigger = rightButton.gameObject.AddComponent<EventTrigger>();
-
-        // Left button events
-        EventTrigger.Entry leftPointerDown = new EventTrigger.Entry { eventID = EventTriggerType.PointerDown };
-        leftPointerDown.callback.AddListener((data) => { isLeftButtonPressed = true; isRightButtonPressed = false; });
-        leftTrigger.triggers.Add(leftPointerDown);
-
-        EventTrigger.Entry leftPointerUp = new EventTrigger.Entry { eventID = EventTriggerType.PointerUp };
-        leftPointerUp.callback.AddListener((data) => { isLeftButtonPressed = false; });
-        leftTrigger.triggers.Add(leftPointerUp);
-
-        // Right button events
-        EventTrigger.Entry rightPointerDown = new EventTrigger.Entry { eventID = EventTriggerType.PointerDown };
-        rightPointerDown.callback.AddListener((data) => { isRightButtonPressed = true; isLeftButtonPressed = false; });
-        rightTrigger.triggers.Add(rightPointerDown);
-
-        EventTrigger.Entry rightPointerUp = new EventTrigger.Entry { eventID = EventTriggerType.PointerUp };
-        rightPointerUp.callback.AddListener((data) => { isRightButtonPressed = false; });
-        rightTrigger.triggers.Add(rightPointerUp);
+        _rb = GetComponent<Rigidbody>();
     }
 
-    private void Update()
+    void Update()
     {
-        ApplyTouchSteering();
-        ApplyMovement();
+        // Point wheels
+        float wheelAngle = -Vector3.Angle(_rb.velocity.normalized, GetDriveDirection()) * Vector3.Cross(_rb.velocity.normalized, GetDriveDirection()).y;
+        wheelAngle = Mathf.Min(Mathf.Max(-maxVisualSteeringAngle, wheelAngle), maxVisualSteeringAngle);
+        PointDriveWheelsAt(wheelAngle);
     }
 
-    private void ApplyTouchSteering()
+    private float GetRawDriftAngle() 
     {
-        // Smoothly increment/decrement steering based on button press
-        if (isLeftButtonPressed)
-        {
-            currentSteeringInput = Mathf.Clamp(currentSteeringInput - steeringSpeed * Time.deltaTime, -1f, 0f);
-        }
-        else if (isRightButtonPressed)
-        {
-            currentSteeringInput = Mathf.Clamp(currentSteeringInput + steeringSpeed * Time.deltaTime, 0f, 1f);
-        }
-        else
-        {
-            // Reset steering input when no button is pressed
-            currentSteeringInput = Mathf.MoveTowards(currentSteeringInput, 0f, steeringSpeed * Time.deltaTime);
-        }
-
-        // Apply parabolic scaling for smoother steering
-        float parabolicInput = currentSteeringInput * Mathf.Abs(currentSteeringInput);
-
-        // Calculate the current rotation angle
-        float currentRotationAngle = transform.eulerAngles.y;
-        if (currentRotationAngle > 180f) currentRotationAngle -= 360f; // Normalize angle to range [-180, 180]
-
-        // Apply a scaling factor to make it harder to turn more at higher angles
-        float angleFactor = Mathf.Clamp01(1f - Mathf.Abs(currentRotationAngle) / angleThreshold);
-        parabolicInput *= angleFactor;
-
-        // Dynamic drift factor adjustment based on speed
-        float speedFactor = Mathf.Clamp01(_moveVec.magnitude / maxSpeed); // Normalize speed effect
-        float driftSteering = parabolicInput * steeringAngle * _moveVec.magnitude * (driftFactor + speedFactor);
-
-        // Lateral drift force
-        Vector3 lateralDrift = transform.right * parabolicInput * _moveVec.magnitude * 0.15f;
-
-        // Apply drift steering and movement
-        Vector3 driftVec = Quaternion.AngleAxis(driftSteering * Time.deltaTime, Vector3.up) * _moveVec;
-        driftVec += lateralDrift; // Apply additional sideways drift
-
-        transform.position += driftVec * Time.deltaTime;
-
-        // Apply time-dependent drag to maintain drift effect
-        _moveVec *= Mathf.Pow(dragAmount, Time.deltaTime);
-        _moveVec = Vector3.Lerp(_moveVec.normalized, transform.forward, tractionForce * _moveVec.magnitude * Time.deltaTime) * _moveVec.magnitude;
-
-        // Update car rotation and wheel movement
-        _rotateVec.y = Mathf.Clamp(parabolicInput * steeringAngle, -steeringAngle, steeringAngle);
-        transform.Rotate(Vector3.up * driftSteering * Time.deltaTime);
-        leftWheel.localRotation = Quaternion.Euler(_rotateVec);
-        rightWheel.localRotation = Quaternion.Euler(_rotateVec);
+        if (! WheelsGrounded()) return 0;
+        return Vector3.Angle(_rb.velocity.normalized, GetDriveDirection()) * Vector3.Cross(_rb.velocity.normalized, GetDriveDirection()).y;
     }
 
-    private void ApplyMovement()
+    public float GetDriftAngle() 
     {
-        // Apply forward movement to the car
-        _moveVec += transform.forward * carSpeed * Time.deltaTime;
-        _moveVec = Vector3.ClampMagnitude(_moveVec, maxSpeed);
+        return GetRawDriftAngle();
+    } 
+
+    public bool IsFrontWheelDrift() 
+    {
+        return Mathf.Abs(GetDriftAngle()) > maxVisualSteeringAngle;
+    }
+
+    public bool IsDrifting() 
+    {
+        return Mathf.Abs(GetDriftAngle()) > driftAngleThreshold;
+    }
+
+    private void FixedUpdate()
+    {
+        // Body
+        _rb.centerOfMass = centerOfMass.localPosition;  // Doing each frame allows it to be changed in inspector
+        _rb.AddForce(-GetDragForce() * _rb.velocity.normalized);
+
+        // If rear wheels on ground
+        if (WheelsGrounded())
+        {
+            // Engine
+            _rb.AddForce(GetDriveDirection() * GetDriveForce());
+
+            // Steering
+            _rb.angularVelocity += -transform.up * GetSteeringAngularAcceleration() * Time.fixedDeltaTime;
+        }
+    }
+
+    /// Point the drive wheels at angle
+    /// angle relative to car direction
+    /// angle = 0 means wheels point forward
+    /// Does it smoothly
+    private void PointDriveWheelsAt(float targetAngle)
+    {
+        foreach (Transform wheel in steeringWheels)
+        {
+            float currentAngle = wheel.localEulerAngles.y;
+            float change = ((((targetAngle - currentAngle) % 360) + 540) % 360) - 180;
+            float newAngle = currentAngle + change * Time.deltaTime * maxVisualSteeringSpeed;
+            wheel.localEulerAngles = new Vector3(0, newAngle, 0);
+        }
+    }
+
+    /// Are the drive wheels grounded
+    /// Can the car accelerate?
+    public bool WheelsGrounded()
+    {
+        return Physics.OverlapBox(groundTrigger.position, groundTrigger.localScale / 2, Quaternion.identity, wheelCollidables).Length > 0;
+    }
+
+    /// How fast do we spin car?
+    float GetSteeringAngularAcceleration()
+    {
+        return GetSteering() * maxAngularAcceleration * Mathf.PI / 180;
+    }
+
+    /// How much should we be turning?
+    /// Between -1 and 1
+    float GetSteering()
+    {
+        return Mathf.Clamp(TouchInput.centeredScreenPosition.x / screenUse, -1, 1);
+    }
+
+    /// What way car pointing
+    /// Is normalized
+    Vector3 GetDriveDirection()
+    {
+        return _rb.transform.forward.normalized;
+    }
+
+    /// How many beans will the car push itself with
+    /// in newtown
+    float GetDriveForce()
+    {
+        return driveForce * throttle;
+    }
+
+    /// Magnitude of drag
+    /// velocity squared times drag coefficient
+    /// Uses overall velocity, doesn't care about what direction car pointing
+    float GetDragForce()
+    {
+        return Mathf.Pow(_rb.velocity.magnitude, 2) * drag;
     }
 }

@@ -4,7 +4,7 @@ public class CarShopTester : MonoBehaviour
 {
     public Shop shop; 
 
-    void Update()
+    private void Update()
     {
         if (Input.GetKeyDown(KeyCode.RightArrow))
         {
@@ -20,8 +20,7 @@ public class CarShopTester : MonoBehaviour
         }
     }
 
-
-    void SelectNextCar()
+    private void SelectNextCar()
     {
         if (shop.cars.Length == 0)
         {
@@ -32,7 +31,7 @@ public class CarShopTester : MonoBehaviour
         shop.SelectCar(nextIndex);
     }
 
-    void SelectPreviousCar()
+    private void SelectPreviousCar()
     {
         if (shop.cars.Length == 0)
         {
@@ -43,7 +42,7 @@ public class CarShopTester : MonoBehaviour
         shop.SelectCar(prevIndex);
     }
 
-    void BuySelectedCar()
+    private void BuySelectedCar()
     {
         shop.BuyCar(shop.selectedCarIndex);
     }

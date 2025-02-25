@@ -62,14 +62,14 @@ public class CarSuspension : MonoBehaviour
         Vector3 rayOrigin = (wheel.position - GetUpDir() * verticalOffset) - GetUpDir() * minDistance;
         bool hasHit = Physics.Raycast(rayOrigin, -GetUpDir(), out hit, rayLength, roadLayer);
         float distanceFromRest = hasHit ? hit.distance + minDistance : 0;
-        if (hasHit)
+        if (hasHit && wheel.childCount > 0)
         {
-            wheel.GetChild(0).transform.position = hit.point + GetUpDir() * verticalWheelVisualOffset;
-            wheel.GetChild(0).transform.localPosition += Vector3.up / 2;
+            Transform wheelChild = wheel.GetChild(0);
+            wheelChild.position = hit.point + GetUpDir() * verticalWheelVisualOffset;
+            wheelChild.localPosition += Vector3.up / 2;
         }
         return distanceFromRest;
     }
-
     Vector3 GetUpDir()
     {
         return transform.up;

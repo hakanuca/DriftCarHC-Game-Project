@@ -22,9 +22,16 @@ public class CarCamera : MonoBehaviour
 
         if (smoothRotation)
         {
-            Quaternion wantedRotation = Quaternion.LookRotation(transform.position - Camera.main.transform.position, transform.up);
-            Camera.main.transform.rotation = Quaternion.Slerp(Camera.main.transform.rotation, wantedRotation, Time.deltaTime * rotationDamping);
+            Vector3 direction = transform.position - Camera.main.transform.position;
+            if (direction != Vector3.zero)
+            {
+                Quaternion wantedRotation = Quaternion.LookRotation(direction, transform.up);
+                Camera.main.transform.rotation = Quaternion.Slerp(Camera.main.transform.rotation, wantedRotation, Time.deltaTime * rotationDamping);
+            }
         }
-        else Camera.main.transform.LookAt(transform, transform.up);
+        else
+        {
+            Camera.main.transform.LookAt(transform, transform.up);
+        }
     }
 }

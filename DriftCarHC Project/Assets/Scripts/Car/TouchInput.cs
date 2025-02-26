@@ -1,53 +1,96 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
-public class TouchInput : MonoBehaviour
+public class TouchInput : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
-    // Exact pixel position of the touch/mouse on screen ((0, 0) = bottom left)
-    public static Vector2 pixelPosition = Vector2.zero;
-    // Ordinates between 0 and 1 ((0, 0) = bottom left), default is (0, 0)
-    public static Vector2 screenPosition = Vector2.zero;
-    // Ordinates between (-1, -1) and (1, 1). default is (0, 0)
-    public static Vector2 centeredScreenPosition = Vector2.zero;
+    public Button leftButton;
+    public Button rightButton;
+    public Button brakeButton;
 
+    public static bool steeringLeft = false;
+    public static bool steeringRight = false;
+    public static bool braking = false;
     public static bool touched = false;
     public static InputMode inputMode;
+    public static Vector2 centeredScreenPosition = Vector2.zero;
 
     public enum InputMode
     {
-        Mouse,
-        Touch,
+        None,
+        Touch
+    }
+
+    private void Start()
+    {
+        if (leftButton != null)
+        {
+            leftButton.onClick.AddListener(() => SetSteering(true, false));
+        }
+
+        if (rightButton != null)
+        {
+            rightButton.onClick.AddListener(() => SetSteering(false, true));
+        }
     }
 
     private void Update()
     {
-        if (Input.touchCount > 0)
+        if (steeringLeft || steeringRight)
         {
             touched = true;
             inputMode = InputMode.Touch;
-            Touch touch = Input.GetTouch(0);
-            pixelPosition = touch.position;
-            screenPosition = new Vector2(
-                Mathf.Min(Mathf.Max(0, pixelPosition.x / Screen.width), 1),
-                Mathf.Min(Mathf.Max(0, pixelPosition.y / Screen.height), 1)
-            );
-            centeredScreenPosition = screenPosition * 2 - Vector2.one;
         }
-        else if (Input.mousePresent && Input.GetMouseButton(0))
-        {
-            touched = true;
-            inputMode = InputMode.Mouse;
-            pixelPosition = Input.mousePosition;
-            screenPosition = new Vector2(
-                Mathf.Min(Mathf.Max(0, pixelPosition.x / Screen.width), 1),
-                Mathf.Min(Mathf.Max(0, pixelPosition.y / Screen.height), 1)
-            );
-            centeredScreenPosition = screenPosition * 2 - Vector2.one;
-        } else
+        else
         {
             touched = false;
-            screenPosition = Vector2.zero;
-            pixelPosition = Vector2.zero;
-            centeredScreenPosition = Vector2.zero;
+            inputMode = InputMode.None;
+        }
+
+        if (!braking)
+        {
+            CarController car = FindObjectOfType<CarController>();
+            if (car != null)
+            {
+                car.SetBraking(false);
+            }
         }
     }
+
+    private void SetSteering(bool left, bool right)
+    {
+        steeringLeft = left;
+        steeringRight = right;
+        centeredScreenPosition = left ? new Vector2(-1, 0) : right ? new Vector2(1, 0) : Vector2.zero;
+    }
+
+    // Handle brake button press (start braking)
+    public void OnPointerDown(PointerEventData eventData)
+    {
+        if (eventData.pointerPress == brakeButton.gameObject)
+        {
+            SetBraking(true);
+        }
+    }
+
+    public void OnPointerUp(PointerEventData eventData)
+    {
+        if (eventData.pointerPress == brakeButton.gameObject)
+        {
+            SetBraking(false);
+        }
+    }
+
+    public void SetBraking(bool braking)
+    {
+        Debug.Log("Braking: " + braking);
+        TouchInput.braking = braking;
+        CarController car = FindObjectOfType<CarController>();
+        if (car != null)
+        {
+            Debug.Log("Car found");
+            car.SetBraking(braking);
+        }
+    }
+
 }

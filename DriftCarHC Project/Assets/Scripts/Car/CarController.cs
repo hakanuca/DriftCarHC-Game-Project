@@ -5,79 +5,85 @@ public class CarController : MonoBehaviour
 {
     [Header("Control")]
     public float throttle = 1;
-    public float screenUse = 0.8f;  // How much of the screen to use for turning? max turn is when touch at screenUse of screen width
+    public float screenUse = 0.8f;
+    public float brakeForce = 1000f;
+    private bool isBraking = false;
+
     [Header("Body")]
     public Transform centerOfMass;
     public Transform groundTrigger;
     public LayerMask wheelCollidables;
-    public float drag = 1f;
+    public float drag = 0.5f;
+
     [Header("Engine")]
-    public float driveForce = 1;
+    public float driveForce = 500f;
+    public float maxSpeed = 50f;
+
     [Header("Suspension and Steering")]
     public float activeVisualSteeringAngleEffect = 1;
     public float maxVisualSteeringSpeed = 1;
     public float maxVisualSteeringAngle = 30;
-    public float maxAngularAcceleration = 30;    // degrees per second
+    public float maxAngularAcceleration = 30;
     public List<Transform> steeringWheels;
     public List<Transform> driveWheels;
+
     private Rigidbody _rb;
     public float driftAngleThreshold = 10.0f;
 
     void Start()
     {
         _rb = GetComponent<Rigidbody>();
+        _rb.useGravity = true;
+        _rb.isKinematic = false;
     }
 
     void Update()
     {
-        // Point wheels
         float wheelAngle = -Vector3.Angle(_rb.velocity.normalized, GetDriveDirection()) * Vector3.Cross(_rb.velocity.normalized, GetDriveDirection()).y;
         wheelAngle = Mathf.Min(Mathf.Max(-maxVisualSteeringAngle, wheelAngle), maxVisualSteeringAngle);
         PointDriveWheelsAt(wheelAngle);
     }
 
-    private float GetRawDriftAngle() 
+    public void SetBraking(bool braking)
     {
-        if (! WheelsGrounded()) return 0;
-        return Vector3.Angle(_rb.velocity.normalized, GetDriveDirection()) * Vector3.Cross(_rb.velocity.normalized, GetDriveDirection()).y;
-    }
-
-    public float GetDriftAngle() 
-    {
-        return GetRawDriftAngle();
-    } 
-
-    public bool IsFrontWheelDrift() 
-    {
-        return Mathf.Abs(GetDriftAngle()) > maxVisualSteeringAngle;
-    }
-
-    public bool IsDrifting() 
-    {
-        return Mathf.Abs(GetDriftAngle()) > driftAngleThreshold;
-    }
-
-    private void FixedUpdate()
-    {
-        // Body
-        _rb.centerOfMass = centerOfMass.localPosition;  // Doing each frame allows it to be changed in inspector
-        _rb.AddForce(-GetDragForce() * _rb.velocity.normalized);
-
-        // If rear wheels on ground
-        if (WheelsGrounded())
+        isBraking = braking;
+        if (isBraking)
         {
-            // Engine
-            _rb.AddForce(GetDriveDirection() * GetDriveForce());
-
-            // Steering
-            _rb.angularVelocity += -transform.up * GetSteeringAngularAcceleration() * Time.fixedDeltaTime;
+            _rb.drag = 5f; // Increase drag to slow down the car
+        }
+        else
+        {
+            _rb.drag = drag; // Reset drag to normal value
         }
     }
 
-    /// Point the drive wheels at angle
-    /// angle relative to car direction
-    /// angle = 0 means wheels point forward
-    /// Does it smoothly
+
+    private void FixedUpdate()
+    {
+        _rb.centerOfMass = centerOfMass.localPosition;
+
+        Debug.Log("Velocity: " + _rb.velocity.magnitude);
+
+        if (TouchInput.braking)
+        {
+            Debug.Log("Braking2: " + TouchInput.braking);
+            _rb.drag = 5f; // Apply strong braking effect
+            _rb.velocity = Vector3.Lerp(_rb.velocity, Vector3.zero, 0.02f); // Smoothly decrease velocity
+        }
+        else
+        {
+            _rb.drag = drag; // Reset drag when not braking
+
+            if (WheelsGrounded())
+            {
+                float drivePower = GetDriveForce();
+                _rb.AddForce(GetDriveDirection() * drivePower, ForceMode.Force);
+                _rb.angularVelocity += -transform.up * GetSteeringAngularAcceleration() * Time.fixedDeltaTime;
+            }
+        }
+    }
+
+
     private void PointDriveWheelsAt(float targetAngle)
     {
         foreach (Transform wheel in steeringWheels)
@@ -89,45 +95,29 @@ public class CarController : MonoBehaviour
         }
     }
 
-    /// Are the drive wheels grounded
-    /// Can the car accelerate?
     public bool WheelsGrounded()
     {
-        return Physics.OverlapBox(groundTrigger.position, groundTrigger.localScale / 2, Quaternion.identity, wheelCollidables).Length > 0;
+        Collider[] colliders = Physics.OverlapBox(groundTrigger.position, groundTrigger.localScale / 2, Quaternion.identity, wheelCollidables);
+        return colliders.Length > 0;
     }
 
-    /// How fast do we spin car?
     float GetSteeringAngularAcceleration()
     {
         return GetSteering() * maxAngularAcceleration * Mathf.PI / 180;
     }
 
-    /// How much should we be turning?
-    /// Between -1 and 1
     float GetSteering()
     {
         return Mathf.Clamp(TouchInput.centeredScreenPosition.x / screenUse, -1, 1);
     }
 
-    /// What way car pointing
-    /// Is normalized
     Vector3 GetDriveDirection()
     {
-        return _rb.transform.forward.normalized;
+        return transform.forward.normalized;
     }
 
-    /// How many beans will the car push itself with
-    /// in newtown
     float GetDriveForce()
     {
         return driveForce * throttle;
-    }
-
-    /// Magnitude of drag
-    /// velocity squared times drag coefficient
-    /// Uses overall velocity, doesn't care about what direction car pointing
-    float GetDragForce()
-    {
-        return Mathf.Pow(_rb.velocity.magnitude, 2) * drag;
     }
 }

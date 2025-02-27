@@ -57,7 +57,6 @@ public class CarController : MonoBehaviour
         }
     }
 
-
     private void FixedUpdate()
     {
         _rb.centerOfMass = centerOfMass.localPosition;
@@ -82,8 +81,7 @@ public class CarController : MonoBehaviour
             }
         }
     }
-
-
+    
     private void PointDriveWheelsAt(float targetAngle)
     {
         foreach (Transform wheel in steeringWheels)
@@ -93,6 +91,12 @@ public class CarController : MonoBehaviour
             float newAngle = currentAngle + change * Time.deltaTime * maxVisualSteeringSpeed;
             wheel.localEulerAngles = new Vector3(0, newAngle, 0);
         }
+    }
+    
+    public void SetSteering(float steeringInput)
+    {
+        float targetAngle = steeringInput * maxVisualSteeringAngle;
+        PointDriveWheelsAt(targetAngle);
     }
 
     public bool WheelsGrounded()

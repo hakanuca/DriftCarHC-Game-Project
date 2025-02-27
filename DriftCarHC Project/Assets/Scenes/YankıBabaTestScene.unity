@@ -7702,7 +7702,7 @@ MonoBehaviour:
   activeVisualSteeringAngleEffect: 100
   maxVisualSteeringSpeed: 100
   maxVisualSteeringAngle: 30
-  maxAngularAcceleration: 2000
+  maxAngularAcceleration: 50
   steeringWheels:
   - {fileID: 2799882756769312935}
   - {fileID: 6361060764098594214}
@@ -7710,6 +7710,7 @@ MonoBehaviour:
   - {fileID: 7020184661683399006}
   - {fileID: 7175924478730174241}
   driftAngleThreshold: 3
+  reverseForce: 2000
 --- !u!114 &7871216847790526423
 MonoBehaviour:
   m_ObjectHideFlags: 0

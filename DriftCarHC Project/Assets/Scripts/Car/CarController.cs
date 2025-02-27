@@ -5,186 +5,121 @@ public class CarController : MonoBehaviour
 {
     [Header("Control")]
     public float throttle = 1;
-    public float screenUse = 0.8f;
-    public float brakeForce = 1000f;
-    private bool isBraking = false;
-    private bool isReversing = false; 
-
+    public float screenUse = 0.8f;  // How much of the screen to use for turning? max turn is when touch at screenUse of screen width
     [Header("Body")]
     public Transform centerOfMass;
     public Transform groundTrigger;
     public LayerMask wheelCollidables;
-    public float drag = 0.5f;
-
+    public float drag = 1f;
     [Header("Engine")]
-    public float driveForce = 500f;
-    public float maxSpeed = 50f;
-
+    public float driveForce = 1;
     [Header("Suspension and Steering")]
     public float activeVisualSteeringAngleEffect = 1;
     public float maxVisualSteeringSpeed = 1;
     public float maxVisualSteeringAngle = 30;
-    public float maxAngularAcceleration = 30;
+    public float maxAngularAcceleration = 30;    // degrees per second
     public List<Transform> steeringWheels;
     public List<Transform> driveWheels;
-
     private Rigidbody _rb;
     public float driftAngleThreshold = 10.0f;
-    private float  reverseForce = 1000f; // don't change the variable!
 
     void Start()
     {
         _rb = GetComponent<Rigidbody>();
-        _rb.useGravity = true;
-        _rb.isKinematic = false;
-        
-        foreach (Transform wheel in steeringWheels)
-        {
-            Debug.Log($"[Check] Steering Wheel Assigned: {wheel.name}");
-        }
     }
 
-    private void Update()
+    void Update()
     {
-        float steeringInput = GetSteering();
-        float targetAngle = steeringInput * maxVisualSteeringAngle;
-
-        Debug.Log($"[Update] Steering Input: {steeringInput}, Target Angle: {targetAngle}");
-
-        // Fix: Ensure we pass the correct steering input
-        PointDriveWheelsAt(targetAngle);
-        
-        foreach (Transform wheel in steeringWheels)
-        {
-            Debug.Log($"[Wheel Rotation Check] {wheel.name} Rotation: {wheel.localEulerAngles}");
-        }
+        // Point wheels
+        float wheelAngle = -Vector3.Angle(_rb.velocity.normalized, GetDriveDirection()) * Vector3.Cross(_rb.velocity.normalized, GetDriveDirection()).y;
+        wheelAngle = Mathf.Min(Mathf.Max(-maxVisualSteeringAngle, wheelAngle), maxVisualSteeringAngle);
+        PointDriveWheelsAt(wheelAngle);
     }
 
-
-    public void SetBraking(bool braking)
-    {
-        isBraking = braking;
-        if (isBraking)
-        {
-            _rb.drag = 5f; // Increase drag to slow down the car
-        }
-        else
-        {
-            _rb.drag = drag; // Reset drag to normal value
-        }
+    private float GetRawDriftAngle() {
+        if (! WheelsGrounded()) return 0;
+        return Vector3.Angle(_rb.velocity.normalized, GetDriveDirection()) * Vector3.Cross(_rb.velocity.normalized, GetDriveDirection()).y;
     }
 
-    private void FixedUpdate()
+    public float GetDriftAngle() {
+        return GetRawDriftAngle();
+    } 
+
+    public bool IsFrontWheelDrift() {
+        return Mathf.Abs(GetDriftAngle()) > maxVisualSteeringAngle;
+    }
+
+    public bool IsDrifting() {
+        return Mathf.Abs(GetDriftAngle()) > driftAngleThreshold;
+    }
+
+    void FixedUpdate()
     {
-        _rb.centerOfMass = centerOfMass.localPosition;
+        // Body
+        _rb.centerOfMass = centerOfMass.localPosition;  // Doing each frame allows it to be changed in inspector
+        _rb.AddForce(-GetDragForce() * _rb.velocity.normalized);
 
-        // Determine if the car is reversing based on velocity and direction
-        isReversing = Vector3.Dot(_rb.velocity, transform.forward) < -0.1f;
-
-        if (TouchInput.braking)
+        // If rear wheels on ground
+        if (WheelsGrounded())
         {
-            _rb.drag = 2f; // Reduce drag slightly for smooth deceleration
-            _rb.velocity = Vector3.Lerp(_rb.velocity, Vector3.zero, 0.02f); // Smooth velocity decrease
+            // Engine
+            _rb.AddForce(GetDriveDirection() * GetDriveForce());
 
-            // If the car is slow enough OR already in reverse, allow reversing
-            if (_rb.velocity.magnitude < 1.0f || isReversing)
-            {
-                Vector3 reverseDir = -GetDriveDirection();
-                float reverseBoost = 2.0f;
-                _rb.AddForce(reverseDir * reverseForce * reverseBoost * Time.fixedDeltaTime, ForceMode.Force);
-            }
-        }
-        else
-        {
-            _rb.drag = drag; // Reset drag when not braking
-
-            // Allow normal driving only if not reversing
-            if (WheelsGrounded() && !isReversing)
-            {
-                float drivePower = GetDriveForce();
-                if (_rb.velocity.magnitude < maxSpeed) 
-                {
-                    _rb.AddForce(GetDriveDirection() * drivePower, ForceMode.Force);
-                }
-
-                // Ensure steering actually affects the car!
-                float steering = GetSteering();
-                float turnStrength = 1.5f; // Adjust this if turning is too weak
-                _rb.angularVelocity += -transform.up * (steering * turnStrength) * Time.fixedDeltaTime;
-            }
+            // Steering
+            _rb.angularVelocity += -transform.up * GetSteeringAngularAcceleration() * Time.fixedDeltaTime;
         }
     }
     
-    private void PointDriveWheelsAt(float targetAngle)
+    void PointDriveWheelsAt(float targetAngle)
     {
         foreach (Transform wheel in steeringWheels)
         {
-            Vector3 wheelEuler = wheel.localEulerAngles;
-            float currentAngle = wheelEuler.y;
-
-            // Normalize to -180 to +180
-            if (currentAngle > 180) currentAngle -= 360;
-
-            // Move towards the target smoothly
-            float newAngle = Mathf.MoveTowardsAngle(currentAngle, targetAngle, maxVisualSteeringSpeed * Time.deltaTime * 500);
-
-            Debug.Log($"[PointDriveWheelsAt] Wheel: {wheel.name}, Current Angle: {currentAngle}, Target Angle: {targetAngle}, New Angle: {newAngle}");
-
-            // Force the rotation update
+            float currentAngle = wheel.localEulerAngles.y;
+            float change = ((((targetAngle - currentAngle) % 360) + 540) % 360) - 180;
+            float newAngle = currentAngle + change * Time.deltaTime * maxVisualSteeringSpeed;
             wheel.localEulerAngles = new Vector3(0, newAngle, 0);
         }
     }
-    
-    public void SetSteering(float steeringInput)
-    {
-        float targetAngle = steeringInput * maxVisualSteeringAngle;
-        Debug.Log($"[SetSteering] Steering Input: {steeringInput}, Target Angle: {targetAngle}");
 
-        // Fix: Call GetSteering() directly to avoid unexpected behavior
-        PointDriveWheelsAt(GetSteering() * maxVisualSteeringAngle);
-    }
-    
+    /// Are the drive wheels grounded
+    /// Can the car accelerate?
     public bool WheelsGrounded()
     {
-        Collider[] colliders = Physics.OverlapBox(groundTrigger.position, groundTrigger.localScale / 2, Quaternion.identity, wheelCollidables);
-        return colliders.Length > 0;
+        return Physics.OverlapBox(groundTrigger.position, groundTrigger.localScale / 2, Quaternion.identity, wheelCollidables).Length > 0;
     }
 
+    /// How fast do we spin car?
     float GetSteeringAngularAcceleration()
     {
         return GetSteering() * maxAngularAcceleration * Mathf.PI / 180;
     }
 
+    /// How much should we be turning?
+    /// Between -1 and 1
     float GetSteering()
     {
-        float steering = 0;
-
-        // Directly check if left or right is pressed
-        if (TouchInput.steeringLeft)
-        {
-            steering = -1; // Turn left
-        }
-        else if (TouchInput.steeringRight)
-        {
-            steering = 1; // Turn right
-        }
-        else
-        {
-            // Smooth return to center when no input
-            steering = Mathf.Lerp(steering, 0, Time.deltaTime * 5f);
-        }
-
-        Debug.Log($"[GetSteering] Steering: {steering}");
-        return steering;
+        return TouchInput.steeringValue;
     }
-
+    
+    /// What way car pointing
+    /// Is normalized
     Vector3 GetDriveDirection()
     {
-        return transform.forward.normalized;
+        return _rb.transform.forward.normalized;
     }
 
+    /// How many beans will the car push itself with
+    /// in newtown
     float GetDriveForce()
     {
         return driveForce * throttle;
+    }
+
+    /// Magnitude of drag
+    /// velocity squared times drag coefficient
+    /// Uses overall velocity, doesn't care about what direction car pointing
+    float GetDragForce()
+    {
+        return Mathf.Pow(_rb.velocity.magnitude, 2) * drag;
     }
 }

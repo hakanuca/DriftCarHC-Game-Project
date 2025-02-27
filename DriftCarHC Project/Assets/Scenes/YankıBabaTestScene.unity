@@ -380,42 +380,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 352827098}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Script: {fileID: 11500000, guid: 851f08dce3faaaa49b9a980ef6f383c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Delegates:
-  - eventID: 2
-    callback:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 656001989}
-          m_TargetAssemblyTypeName: TouchInput, Assembly-CSharp
-          m_MethodName: SetRightSteering
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 1
-          m_CallState: 2
-  - eventID: 3
-    callback:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 656001989}
-          m_TargetAssemblyTypeName: TouchInput, Assembly-CSharp
-          m_MethodName: SetRightSteering
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
+  buttonType: 1
 --- !u!1 &440510275
 GameObject:
   m_ObjectHideFlags: 0
@@ -573,53 +541,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1536276917885969887, guid: d639570954d511f4fa6cc33afe5d544f, type: 3}
   m_PrefabInstance: {fileID: 1897053881}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &656001987
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 656001988}
-  - component: {fileID: 656001989}
-  m_Layer: 0
-  m_Name: GameController
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &656001988
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 656001987}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -42.384666, y: -22.541254, z: -0.46200752}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &656001989
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 656001987}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 851f08dce3faaaa49b9a980ef6f383c2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  leftButton: {fileID: 664861850}
-  rightButton: {fileID: 352827100}
-  brakeButton: {fileID: 1623806043}
 --- !u!1 &664861848
 GameObject:
   m_ObjectHideFlags: 0
@@ -751,42 +672,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 664861848}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Script: {fileID: 11500000, guid: 851f08dce3faaaa49b9a980ef6f383c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Delegates:
-  - eventID: 2
-    callback:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 656001989}
-          m_TargetAssemblyTypeName: TouchInput, Assembly-CSharp
-          m_MethodName: SetLeftSteering
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 1
-          m_CallState: 2
-  - eventID: 3
-    callback:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 656001989}
-          m_TargetAssemblyTypeName: TouchInput, Assembly-CSharp
-          m_MethodName: SetLeftSteering
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
+  buttonType: 0
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -3655,42 +3544,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1623806041}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Script: {fileID: 11500000, guid: 851f08dce3faaaa49b9a980ef6f383c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Delegates:
-  - eventID: 2
-    callback:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 656001989}
-          m_TargetAssemblyTypeName: TouchInput, Assembly-CSharp
-          m_MethodName: SetBraking
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 1
-          m_CallState: 2
-  - eventID: 3
-    callback:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 656001989}
-          m_TargetAssemblyTypeName: TouchInput, Assembly-CSharp
-          m_MethodName: SetBraking
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
+  buttonType: 2
 --- !u!1 &1655251823
 GameObject:
   m_ObjectHideFlags: 0
@@ -7679,7 +7536,7 @@ Transform:
   m_GameObject: {fileID: 7871216847790526410}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: -134.528, y: 3.28, z: 55.3}
+  m_LocalPosition: {x: -134.528, y: 3.28, z: 56.04}
   m_LocalScale: {x: 0.7, y: 0.7, z: 0.7}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -7731,21 +7588,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a324333404a9a514da776008d6484e18, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  throttle: 2
+  throttle: 2.5
   screenUse: 0.7
-  brakeForce: 1000
   centerOfMass: {fileID: 2792084658078999894}
   groundTrigger: {fileID: 7575187628552641131}
   wheelCollidables:
     serializedVersion: 2
     m_Bits: 64
-  drag: 0.005
-  driveForce: 15
-  maxSpeed: 20
-  activeVisualSteeringAngleEffect: 1
-  maxVisualSteeringSpeed: 5
-  maxVisualSteeringAngle: 30
-  maxAngularAcceleration: 10
+  drag: 0.02
+  driveForce: 6
+  activeVisualSteeringAngleEffect: 30
+  maxVisualSteeringSpeed: 10
+  maxVisualSteeringAngle: 40
+  maxAngularAcceleration: 9000
   steeringWheels:
   - {fileID: 270288594526547075}
   - {fileID: 6361060764098594214}
@@ -7949,7 +7804,6 @@ MeshFilter:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
-  - {fileID: 656001988}
   - {fileID: 4905180694648444448}
   - {fileID: 705507995}
   - {fileID: 1555945768}

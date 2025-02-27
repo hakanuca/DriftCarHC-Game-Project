@@ -44,7 +44,7 @@ public class TouchInput : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         }
     }
 
-    // Handle brake button press (start braking)
+    // Checks which button was pressed and sets the corresponding boolean to true
     public void OnPointerDown(PointerEventData eventData)
     {
         if (eventData.pointerPress == brakeButton.gameObject)
@@ -54,17 +54,16 @@ public class TouchInput : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 
         if (eventData.pointerPress == leftButton.gameObject)
         {
-            Debug.Log("Left button pressed");
             SetLeftSteering(true);
         }
 
         if (eventData.pointerPress == rightButton.gameObject)
         {
-            Debug.Log("Right button pressed");
             SetRightSteering(true);
         }
     }
 
+    // Checks which button was released and sets the corresponding boolean to false
     public void OnPointerUp(PointerEventData eventData)
     {
         if (eventData.pointerPress == brakeButton.gameObject)
@@ -73,6 +72,7 @@ public class TouchInput : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         }
     }
 
+    // Sets the braking boolean to the given value
     public void SetBraking(bool braking)
     {
         TouchInput.braking = braking;
@@ -83,9 +83,9 @@ public class TouchInput : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         }
     }
 
+    // Sets the steeringLeft boolean to the given value
     public void SetLeftSteering(bool steeringLeft)
     {
-        Debug.Log("SetLeftSteering: " + steeringLeft);
         TouchInput.steeringLeft = steeringLeft;
         CarController car = FindObjectOfType<CarController>();
         if (car != null)
@@ -94,9 +94,9 @@ public class TouchInput : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         }
     }
     
+    // Sets the steeringRight boolean to the given value
     public void SetRightSteering(bool steeringRight)
     {
-        Debug.Log("SetRightSteering: " + steeringRight);
         TouchInput.steeringRight = steeringRight;
         CarController car = FindObjectOfType<CarController>();
         if (car != null)

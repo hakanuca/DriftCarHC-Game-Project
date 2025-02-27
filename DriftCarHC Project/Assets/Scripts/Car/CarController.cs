@@ -8,7 +8,7 @@ public class CarController : MonoBehaviour
     public float screenUse = 0.8f;
     public float brakeForce = 1000f;
     private bool isBraking = false;
-    private bool isReversing = false; // Track whether the car is reversing
+    private bool isReversing = false; 
 
     [Header("Body")]
     public Transform centerOfMass;
@@ -30,21 +30,36 @@ public class CarController : MonoBehaviour
 
     private Rigidbody _rb;
     public float driftAngleThreshold = 10.0f;
-    public float reverseForce = 200f;
+    private float  reverseForce = 1000f; // don't change the variable!
 
     void Start()
     {
         _rb = GetComponent<Rigidbody>();
         _rb.useGravity = true;
         _rb.isKinematic = false;
+        
+        foreach (Transform wheel in steeringWheels)
+        {
+            Debug.Log($"[Check] Steering Wheel Assigned: {wheel.name}");
+        }
     }
 
     private void Update()
     {
-        float wheelAngle = -Vector3.Angle(_rb.velocity.normalized, GetDriveDirection()) * Vector3.Cross(_rb.velocity.normalized, GetDriveDirection()).y;
-        wheelAngle = Mathf.Min(Mathf.Max(-maxVisualSteeringAngle, wheelAngle), maxVisualSteeringAngle);
-        PointDriveWheelsAt(wheelAngle);
+        float steeringInput = GetSteering();
+        float targetAngle = steeringInput * maxVisualSteeringAngle;
+
+        Debug.Log($"[Update] Steering Input: {steeringInput}, Target Angle: {targetAngle}");
+
+        // Fix: Ensure we pass the correct steering input
+        PointDriveWheelsAt(targetAngle);
+        
+        foreach (Transform wheel in steeringWheels)
+        {
+            Debug.Log($"[Wheel Rotation Check] {wheel.name} Rotation: {wheel.localEulerAngles}");
+        }
     }
+
 
     public void SetBraking(bool braking)
     {
@@ -91,19 +106,31 @@ public class CarController : MonoBehaviour
                 {
                     _rb.AddForce(GetDriveDirection() * drivePower, ForceMode.Force);
                 }
-                _rb.angularVelocity += -transform.up * GetSteeringAngularAcceleration() * Time.fixedDeltaTime;
+
+                // Ensure steering actually affects the car!
+                float steering = GetSteering();
+                float turnStrength = 1.5f; // Adjust this if turning is too weak
+                _rb.angularVelocity += -transform.up * (steering * turnStrength) * Time.fixedDeltaTime;
             }
         }
     }
-
-
+    
     private void PointDriveWheelsAt(float targetAngle)
     {
         foreach (Transform wheel in steeringWheels)
         {
-            float currentAngle = wheel.localEulerAngles.y;
-            float change = Mathf.DeltaAngle(currentAngle, targetAngle);
-            float newAngle = currentAngle + change * Time.deltaTime * maxVisualSteeringSpeed;
+            Vector3 wheelEuler = wheel.localEulerAngles;
+            float currentAngle = wheelEuler.y;
+
+            // Normalize to -180 to +180
+            if (currentAngle > 180) currentAngle -= 360;
+
+            // Move towards the target smoothly
+            float newAngle = Mathf.MoveTowardsAngle(currentAngle, targetAngle, maxVisualSteeringSpeed * Time.deltaTime * 500);
+
+            Debug.Log($"[PointDriveWheelsAt] Wheel: {wheel.name}, Current Angle: {currentAngle}, Target Angle: {targetAngle}, New Angle: {newAngle}");
+
+            // Force the rotation update
             wheel.localEulerAngles = new Vector3(0, newAngle, 0);
         }
     }
@@ -111,9 +138,12 @@ public class CarController : MonoBehaviour
     public void SetSteering(float steeringInput)
     {
         float targetAngle = steeringInput * maxVisualSteeringAngle;
-        PointDriveWheelsAt(targetAngle);
-    }
+        Debug.Log($"[SetSteering] Steering Input: {steeringInput}, Target Angle: {targetAngle}");
 
+        // Fix: Call GetSteering() directly to avoid unexpected behavior
+        PointDriveWheelsAt(GetSteering() * maxVisualSteeringAngle);
+    }
+    
     public bool WheelsGrounded()
     {
         Collider[] colliders = Physics.OverlapBox(groundTrigger.position, groundTrigger.localScale / 2, Quaternion.identity, wheelCollidables);
@@ -127,7 +157,25 @@ public class CarController : MonoBehaviour
 
     float GetSteering()
     {
-        return Mathf.Clamp(TouchInput.centeredScreenPosition.x / screenUse, -1, 1);
+        float steering = 0;
+
+        // Directly check if left or right is pressed
+        if (TouchInput.steeringLeft)
+        {
+            steering = -1; // Turn left
+        }
+        else if (TouchInput.steeringRight)
+        {
+            steering = 1; // Turn right
+        }
+        else
+        {
+            // Smooth return to center when no input
+            steering = Mathf.Lerp(steering, 0, Time.deltaTime * 5f);
+        }
+
+        Debug.Log($"[GetSteering] Steering: {steering}");
+        return steering;
     }
 
     Vector3 GetDriveDirection()

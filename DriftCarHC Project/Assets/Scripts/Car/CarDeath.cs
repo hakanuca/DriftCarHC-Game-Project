@@ -19,10 +19,6 @@ public class CarDeath : MonoBehaviour
                 onDeath.Invoke();
             }
         }
-        // else if (collision.gameObject.transform.parent.gameObject.tag == "Road")
-        // {
-        //     currentSection = collision.gameObject.transform.parent.gameObject.GetComponent<TrackSection>().number;
-        // }
     }
 
 

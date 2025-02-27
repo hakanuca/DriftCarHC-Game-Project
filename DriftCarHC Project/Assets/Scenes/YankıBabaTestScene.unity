@@ -183,6 +183,37 @@ MonoBehaviour:
   - {fileID: 11400000, guid: f7c6e434c38d0e44ab2afe524c0f821c, type: 2}
   carManager: {fileID: 1429378796}
   selectedCarIndex: 0
+--- !u!1 &240307387
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 240307388}
+  m_Layer: 0
+  m_Name: DedObject
+  m_TagString: Crashable
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &240307388
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 240307387}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 7.0997357, y: 18.835136, z: 71.43897}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &345632274
 GameObject:
   m_ObjectHideFlags: 0
@@ -6535,7 +6566,7 @@ Transform:
   m_GameObject: {fileID: 2792084658078999895}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.3, z: 0}
+  m_LocalPosition: {x: 0, y: 0.75, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -6694,7 +6725,7 @@ Transform:
   m_GameObject: {fileID: 4934967173751372916}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.18, z: 0}
+  m_LocalPosition: {x: 0, y: 0.51, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -6963,8 +6994,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1.76, y: 1.2531277, z: 4.64216}
-  m_Center: {x: 0, y: 0.7472914, z: 0.10828209}
+  m_Size: {x: 1.7600001, y: 1.4502422, z: 4.64216}
+  m_Center: {x: -1.9167974e-16, y: 0.6487345, z: 0.10828206}
 --- !u!4 &4786542789535644565
 Transform:
   m_ObjectHideFlags: 0
@@ -7041,8 +7072,20 @@ PrefabInstance:
       value: Main Camera
       objectReference: {fileID: 0}
     - target: {fileID: 8565009172537214739, guid: 0a3ac07e832068b4f867cb63d3ece810, type: 3}
+      propertyPath: m_HDR
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8565009172537214739, guid: 0a3ac07e832068b4f867cb63d3ece810, type: 3}
+      propertyPath: m_AllowMSAA
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8565009172537214739, guid: 0a3ac07e832068b4f867cb63d3ece810, type: 3}
       propertyPath: m_RenderingPath
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8565009172537214739, guid: 0a3ac07e832068b4f867cb63d3ece810, type: 3}
+      propertyPath: m_OcclusionCulling
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -7217,7 +7260,7 @@ Transform:
   m_GameObject: {fileID: 2127418872360619717}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.21, z: 0}
+  m_LocalPosition: {x: 0, y: 0.101, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -7236,7 +7279,7 @@ Transform:
   m_GameObject: {fileID: 4147741166538515795}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.235, z: 0}
+  m_LocalPosition: {x: -0, y: 0, z: 0.33}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -7496,7 +7539,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &7175924478730174241
 Transform:
   m_ObjectHideFlags: 0
@@ -7636,7 +7679,7 @@ Transform:
   m_GameObject: {fileID: 7871216847790526410}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: -134.55, y: 3.28, z: 55.3}
+  m_LocalPosition: {x: -134.528, y: 3.28, z: 55.3}
   m_LocalScale: {x: 0.7, y: 0.7, z: 0.7}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -7699,18 +7742,17 @@ MonoBehaviour:
   drag: 0.005
   driveForce: 15
   maxSpeed: 20
-  activeVisualSteeringAngleEffect: 100
-  maxVisualSteeringSpeed: 100
+  activeVisualSteeringAngleEffect: 1
+  maxVisualSteeringSpeed: 5
   maxVisualSteeringAngle: 30
-  maxAngularAcceleration: 50
+  maxAngularAcceleration: 10
   steeringWheels:
-  - {fileID: 2799882756769312935}
+  - {fileID: 270288594526547075}
   - {fileID: 6361060764098594214}
   driveWheels:
   - {fileID: 7020184661683399006}
   - {fileID: 7175924478730174241}
   driftAngleThreshold: 3
-  reverseForce: 1000
 --- !u!114 &7871216847790526423
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7918,4 +7960,5 @@ SceneRoots:
   - {fileID: 7871216847790526416}
   - {fileID: 1884298645}
   - {fileID: 722367010}
+  - {fileID: 240307388}
   - {fileID: 519795292}

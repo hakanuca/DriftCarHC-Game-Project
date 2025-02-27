@@ -29,7 +29,7 @@ public class CarController : MonoBehaviour
 
     private Rigidbody _rb;
     public float driftAngleThreshold = 10.0f;
-
+    public float reverseForce = 200f; // Add this line to the class
     void Start()
     {
         _rb = GetComponent<Rigidbody>();
@@ -37,10 +37,11 @@ public class CarController : MonoBehaviour
         _rb.isKinematic = false;
     }
 
-    void Update()
+    private void Update()
     {
         float wheelAngle = -Vector3.Angle(_rb.velocity.normalized, GetDriveDirection()) * Vector3.Cross(_rb.velocity.normalized, GetDriveDirection()).y;
         wheelAngle = Mathf.Min(Mathf.Max(-maxVisualSteeringAngle, wheelAngle), maxVisualSteeringAngle);
+        //Debug.Log("Calculated Wheel Angle: " + wheelAngle);
         PointDriveWheelsAt(wheelAngle);
     }
 
@@ -61,13 +62,18 @@ public class CarController : MonoBehaviour
     {
         _rb.centerOfMass = centerOfMass.localPosition;
 
-        Debug.Log("Velocity: " + _rb.velocity.magnitude);
-
         if (TouchInput.braking)
         {
-            Debug.Log("Braking2: " + TouchInput.braking);
-            _rb.drag = 5f; // Apply strong braking effect
+            _rb.drag = 2f; // Reduce drag slightly to allow smoother reverse acceleration
             _rb.velocity = Vector3.Lerp(_rb.velocity, Vector3.zero, 0.02f); // Smoothly decrease velocity
+
+            // Check if the car is slow enough to reverse
+            if (_rb.velocity.magnitude < 0.5f) 
+            {
+                Vector3 reverseDir = -GetDriveDirection();
+                float reverseBoost = 2.0f; // Increase speed when reversing
+                _rb.AddForce(reverseDir * reverseForce * reverseBoost * Time.fixedDeltaTime, ForceMode.Force);
+            }
         }
         else
         {
@@ -76,19 +82,25 @@ public class CarController : MonoBehaviour
             if (WheelsGrounded())
             {
                 float drivePower = GetDriveForce();
-                _rb.AddForce(GetDriveDirection() * drivePower, ForceMode.Force);
+                if (_rb.velocity.magnitude < maxSpeed) 
+                {
+                    _rb.AddForce(GetDriveDirection() * drivePower, ForceMode.Force);
+                }
                 _rb.angularVelocity += -transform.up * GetSteeringAngularAcceleration() * Time.fixedDeltaTime;
             }
         }
     }
+
+
     
     private void PointDriveWheelsAt(float targetAngle)
     {
         foreach (Transform wheel in steeringWheels)
         {
             float currentAngle = wheel.localEulerAngles.y;
-            float change = ((((targetAngle - currentAngle) % 360) + 540) % 360) - 180;
+            float change = Mathf.DeltaAngle(currentAngle, targetAngle);
             float newAngle = currentAngle + change * Time.deltaTime * maxVisualSteeringSpeed;
+            //Debug.Log("Current Wheel Angle: " + currentAngle + ", Target Angle: " + targetAngle + ", New Angle: " + newAngle);
             wheel.localEulerAngles = new Vector3(0, newAngle, 0);
         }
     }
@@ -96,6 +108,7 @@ public class CarController : MonoBehaviour
     public void SetSteering(float steeringInput)
     {
         float targetAngle = steeringInput * maxVisualSteeringAngle;
+        //Debug.Log("Steering Input: " + steeringInput + ", Target Angle: " + targetAngle);
         PointDriveWheelsAt(targetAngle);
     }
 

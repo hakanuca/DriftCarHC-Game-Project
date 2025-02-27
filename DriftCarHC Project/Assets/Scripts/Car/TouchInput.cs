@@ -21,19 +21,6 @@ public class TouchInput : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         Touch
     }
 
-    private void Start()
-    {
-        if (leftButton != null)
-        {
-            leftButton.onClick.AddListener(() => SetSteering(true, false));
-        }
-
-        if (rightButton != null)
-        {
-            rightButton.onClick.AddListener(() => SetSteering(false, true));
-        }
-    }
-
     private void Update()
     {
         if (steeringLeft || steeringRight)
@@ -57,20 +44,6 @@ public class TouchInput : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         }
     }
 
-    private void SetSteering(bool left, bool right)
-    {
-        steeringLeft = left;
-        steeringRight = right;
-        centeredScreenPosition = left ? new Vector2(-1, 0) : right ? new Vector2(1, 0) : Vector2.zero;
-
-        CarController car = FindObjectOfType<CarController>();
-        if (car != null)
-        {
-            float steeringInput = left ? -1 : right ? 1 : 0;
-            car.SetSteering(steeringInput);
-        }
-    }
-
     // Handle brake button press (start braking)
     public void OnPointerDown(PointerEventData eventData)
     {
@@ -81,12 +54,14 @@ public class TouchInput : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 
         if (eventData.pointerPress == leftButton.gameObject)
         {
-            SetSteering(true, false);
+            Debug.Log("Left button pressed");
+            SetLeftSteering(true);
         }
 
         if (eventData.pointerPress == rightButton.gameObject)
         {
-            SetSteering(false, true);
+            Debug.Log("Right button pressed");
+            SetRightSteering(true);
         }
     }
 
@@ -95,14 +70,6 @@ public class TouchInput : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         if (eventData.pointerPress == brakeButton.gameObject)
         {
             SetBraking(false);
-        }
-        if (eventData.pointerPress == leftButton.gameObject)
-        {
-            SetSteering(false, false);
-        }
-        if (eventData.pointerPress == rightButton.gameObject)
-        {
-            SetSteering(false, false);
         }
     }
 
@@ -113,6 +80,28 @@ public class TouchInput : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         if (car != null)
         {
             car.SetBraking(braking);
+        }
+    }
+
+    public void SetLeftSteering(bool steeringLeft)
+    {
+        Debug.Log("SetLeftSteering: " + steeringLeft);
+        TouchInput.steeringLeft = steeringLeft;
+        CarController car = FindObjectOfType<CarController>();
+        if (car != null)
+        {
+            car.SetSteering(steeringLeft ? -1 : 0);
+        }
+    }
+    
+    public void SetRightSteering(bool steeringRight)
+    {
+        Debug.Log("SetRightSteering: " + steeringRight);
+        TouchInput.steeringRight = steeringRight;
+        CarController car = FindObjectOfType<CarController>();
+        if (car != null)
+        {
+            car.SetSteering(steeringRight ? 1 : 0);
         }
     }
 

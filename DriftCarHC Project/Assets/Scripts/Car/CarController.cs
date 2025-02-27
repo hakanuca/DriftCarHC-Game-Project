@@ -8,6 +8,7 @@ public class CarController : MonoBehaviour
     public float screenUse = 0.8f;
     public float brakeForce = 1000f;
     private bool isBraking = false;
+    private bool isReversing = false; // Track whether the car is reversing
 
     [Header("Body")]
     public Transform centerOfMass;
@@ -29,7 +30,8 @@ public class CarController : MonoBehaviour
 
     private Rigidbody _rb;
     public float driftAngleThreshold = 10.0f;
-    public float reverseForce = 200f; // Add this line to the class
+    public float reverseForce = 200f;
+
     void Start()
     {
         _rb = GetComponent<Rigidbody>();
@@ -41,7 +43,6 @@ public class CarController : MonoBehaviour
     {
         float wheelAngle = -Vector3.Angle(_rb.velocity.normalized, GetDriveDirection()) * Vector3.Cross(_rb.velocity.normalized, GetDriveDirection()).y;
         wheelAngle = Mathf.Min(Mathf.Max(-maxVisualSteeringAngle, wheelAngle), maxVisualSteeringAngle);
-        //Debug.Log("Calculated Wheel Angle: " + wheelAngle);
         PointDriveWheelsAt(wheelAngle);
     }
 
@@ -62,16 +63,19 @@ public class CarController : MonoBehaviour
     {
         _rb.centerOfMass = centerOfMass.localPosition;
 
+        // Determine if the car is reversing based on velocity and direction
+        isReversing = Vector3.Dot(_rb.velocity, transform.forward) < -0.1f;
+
         if (TouchInput.braking)
         {
-            _rb.drag = 2f; // Reduce drag slightly to allow smoother reverse acceleration
-            _rb.velocity = Vector3.Lerp(_rb.velocity, Vector3.zero, 0.02f); // Smoothly decrease velocity
+            _rb.drag = 2f; // Reduce drag slightly for smooth deceleration
+            _rb.velocity = Vector3.Lerp(_rb.velocity, Vector3.zero, 0.02f); // Smooth velocity decrease
 
-            // Check if the car is slow enough to reverse
-            if (_rb.velocity.magnitude < 0.5f) 
+            // If the car is slow enough OR already in reverse, allow reversing
+            if (_rb.velocity.magnitude < 1.0f || isReversing)
             {
                 Vector3 reverseDir = -GetDriveDirection();
-                float reverseBoost = 2.0f; // Increase speed when reversing
+                float reverseBoost = 2.0f;
                 _rb.AddForce(reverseDir * reverseForce * reverseBoost * Time.fixedDeltaTime, ForceMode.Force);
             }
         }
@@ -79,7 +83,8 @@ public class CarController : MonoBehaviour
         {
             _rb.drag = drag; // Reset drag when not braking
 
-            if (WheelsGrounded())
+            // Allow normal driving only if not reversing
+            if (WheelsGrounded() && !isReversing)
             {
                 float drivePower = GetDriveForce();
                 if (_rb.velocity.magnitude < maxSpeed) 
@@ -92,7 +97,6 @@ public class CarController : MonoBehaviour
     }
 
 
-    
     private void PointDriveWheelsAt(float targetAngle)
     {
         foreach (Transform wheel in steeringWheels)
@@ -100,7 +104,6 @@ public class CarController : MonoBehaviour
             float currentAngle = wheel.localEulerAngles.y;
             float change = Mathf.DeltaAngle(currentAngle, targetAngle);
             float newAngle = currentAngle + change * Time.deltaTime * maxVisualSteeringSpeed;
-            //Debug.Log("Current Wheel Angle: " + currentAngle + ", Target Angle: " + targetAngle + ", New Angle: " + newAngle);
             wheel.localEulerAngles = new Vector3(0, newAngle, 0);
         }
     }
@@ -108,7 +111,6 @@ public class CarController : MonoBehaviour
     public void SetSteering(float steeringInput)
     {
         float targetAngle = steeringInput * maxVisualSteeringAngle;
-        //Debug.Log("Steering Input: " + steeringInput + ", Target Angle: " + targetAngle);
         PointDriveWheelsAt(targetAngle);
     }
 

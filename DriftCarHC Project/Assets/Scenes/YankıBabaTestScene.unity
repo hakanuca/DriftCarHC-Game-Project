@@ -7710,7 +7710,7 @@ MonoBehaviour:
   - {fileID: 7020184661683399006}
   - {fileID: 7175924478730174241}
   driftAngleThreshold: 3
-  reverseForce: 2000
+  reverseForce: 1000
 --- !u!114 &7871216847790526423
 MonoBehaviour:
   m_ObjectHideFlags: 0

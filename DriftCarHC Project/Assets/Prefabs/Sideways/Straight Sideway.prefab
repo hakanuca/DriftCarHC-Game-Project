@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 939370269645672735}
   m_Layer: 0
   m_Name: Sideway (1)
-  m_TagString: Untagged
+  m_TagString: Crashable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -99,7 +99,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -116,7 +116,7 @@ GameObject:
   - component: {fileID: 4237851492487236517}
   m_Layer: 0
   m_Name: Straight Sideway
-  m_TagString: Untagged
+  m_TagString: Crashable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -152,7 +152,7 @@ GameObject:
   - component: {fileID: 7796743373016068745}
   m_Layer: 0
   m_Name: Sideway
-  m_TagString: Untagged
+  m_TagString: Crashable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

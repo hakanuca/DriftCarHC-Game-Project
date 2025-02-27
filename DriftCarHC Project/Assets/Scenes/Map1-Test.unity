@@ -1055,6 +1055,37 @@ RectTransform:
   m_AnchoredPosition: {x: -131, y: 1207}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &1031865969
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1031865970}
+  m_Layer: 0
+  m_Name: Spawnpoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1031865970
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1031865969}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 59.91, y: 0.6, z: 58.1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1171183600
 GameObject:
   m_ObjectHideFlags: 0
@@ -1247,7 +1278,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -1707,37 +1738,6 @@ MonoBehaviour:
   moveDistance: 150
   moveSpeed: 50
   respawnDelay: 5
---- !u!1 &1626344220
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1626344221}
-  m_Layer: 0
-  m_Name: Train
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1626344221
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1626344220}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 18.53376, y: -23.654423, z: -41.8563}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1695105099
 GameObject:
   m_ObjectHideFlags: 0
@@ -1945,6 +1945,7 @@ GameObject:
   - component: {fileID: 1853973690}
   - component: {fileID: 1853973689}
   - component: {fileID: 1853973688}
+  - component: {fileID: 1853973691}
   m_Layer: 0
   m_Name: Car
   m_TagString: Player
@@ -1993,7 +1994,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   throttle: 1
   screenUse: 0.8
-  brakeForce: 1000
   centerOfMass: {fileID: 0}
   groundTrigger: {fileID: 0}
   wheelCollidables:
@@ -2001,7 +2001,6 @@ MonoBehaviour:
     m_Bits: 0
   drag: 1
   driveForce: 1
-  maxSpeed: 50
   activeVisualSteeringAngleEffect: 1
   maxVisualSteeringSpeed: 1
   maxVisualSteeringAngle: 30
@@ -2009,7 +2008,6 @@ MonoBehaviour:
   steeringWheels: []
   driveWheels: []
   driftAngleThreshold: 10
-  reverseForce: 200
 --- !u!4 &1853973690
 Transform:
   m_ObjectHideFlags: 0
@@ -2019,7 +2017,7 @@ Transform:
   m_GameObject: {fileID: 1853973687}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: -22.34, y: -2.33, z: 58}
+  m_LocalPosition: {x: -19.4, y: 25.26, z: 63.32}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2030,6 +2028,19 @@ Transform:
   - {fileID: 1788012775}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
+--- !u!114 &1853973691
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1853973687}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b8c9d68c835a6a24395b26687eaf2dba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  respawnPoint: {fileID: 1031865970}
 --- !u!1 &1977219431
 GameObject:
   m_ObjectHideFlags: 0
@@ -2263,9 +2274,17 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1382603405251597390, guid: eb54d72e25045e7498c127f912aa4b94, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1559641885917045943, guid: eb54d72e25045e7498c127f912aa4b94, type: 3}
       propertyPath: m_Name
       value: First Part of Map
+      objectReference: {fileID: 0}
+    - target: {fileID: 2043010268330366055, guid: eb54d72e25045e7498c127f912aa4b94, type: 3}
+      propertyPath: m_TagString
+      value: Crashable
       objectReference: {fileID: 0}
     - target: {fileID: 7066679672161684597, guid: eb54d72e25045e7498c127f912aa4b94, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2497,5 +2516,5 @@ SceneRoots:
   - {fileID: 4591376046958643959}
   - {fileID: 255852660}
   - {fileID: 212631662}
-  - {fileID: 1626344221}
   - {fileID: 1553776362}
+  - {fileID: 1031865970}

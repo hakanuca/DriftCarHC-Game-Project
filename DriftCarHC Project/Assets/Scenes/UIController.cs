@@ -29,17 +29,17 @@ public class UIController : MonoBehaviour
 
     void CloseSettingsButton()
     {
-        LeanTween.move(settingsButton.gameObject, settingsButtonClosePosition.position, 0.5f)
+        LeanTween.move(settingsButton.gameObject, settingsButtonClosePosition.position, 1f)
             .setEase(LeanTweenType.easeInOutBack);
-        LeanTween.move(settingsPanel, settingsPanelClosePosition.position, 0.5f)
-            .setEase(LeanTweenType.easeInOutElastic);
+        LeanTween.move(settingsPanel, settingsPanelClosePosition.position, 1f)
+            .setEase(LeanTweenType.easeInOutSine);
     }
 
     void OpenSettingsButton()
     {
-        LeanTween.move(settingsButton.gameObject, settingsButtonOpenPosition.position, 0.5f)
-            .setEase(LeanTweenType.easeInOutBounce);
-        LeanTween.move(settingsPanel, settingsPanelOpenPosition.position, 0.5f)
+        LeanTween.move(settingsButton.gameObject, settingsButtonOpenPosition.position, 1f)
+            .setEase(LeanTweenType.easeInOutBack);
+        LeanTween.move(settingsPanel, settingsPanelOpenPosition.position, 1f)
             .setEase(LeanTweenType.easeInOutSine);
     }
 

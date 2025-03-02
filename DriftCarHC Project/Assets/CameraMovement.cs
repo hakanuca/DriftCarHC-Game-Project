@@ -17,6 +17,8 @@ public class CameraMovement : MonoBehaviour
     private Quaternion endRot;
     private float timeElapsed = 0f;
 
+    private bool isHomeReverse = true; // Flag to track toggle state
+
     private void Start()
     {
         // Initialize camera to start position
@@ -24,7 +26,7 @@ public class CameraMovement : MonoBehaviour
         transform.rotation = homePosition.rotation;
     }
 
-    // Move to Camera to Garage
+    // Move to Garage View
     public void MoveToGarageView()
     {
         if (!isMoving)
@@ -32,8 +34,8 @@ public class CameraMovement : MonoBehaviour
             StartCoroutine(MoveCamera(garagePosition));
         }
     }
-    
-    // Move to Camera to Levels
+
+    // Move to Levels View
     public void MoveToLevelsView()
     {
         if (!isMoving)
@@ -42,7 +44,7 @@ public class CameraMovement : MonoBehaviour
         }
     }
 
-    // Move to Camera to Home
+    // Move to Home View
     public void MoveToHomeView()
     {
         if (!isMoving)
@@ -50,13 +52,30 @@ public class CameraMovement : MonoBehaviour
             StartCoroutine(MoveCamera(homePosition));
         }
     }
-    
-    // Move to Camera to Home Reverse
+
+    // Move to Home Reverse View
     public void MoveToHomeReverseView()
     {
         if (!isMoving)
         {
             StartCoroutine(MoveCamera(homeReversePosition));
+        }
+    }
+
+    // Toggle between Home and Home Reverse
+    public void ToggleHomeView()
+    {
+        if (!isMoving)
+        {
+            if (isHomeReverse)
+            {
+                MoveToHomeReverseView();
+            }
+            else
+            {
+                MoveToHomeView();
+            }
+            isHomeReverse = !isHomeReverse; // Toggle state
         }
     }
 

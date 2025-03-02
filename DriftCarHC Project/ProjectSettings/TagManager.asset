@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Crashable
   - Collectable
+  - Trigger
   layers:
   - Default
   - TransparentFX

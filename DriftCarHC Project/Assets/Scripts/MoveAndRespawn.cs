@@ -8,6 +8,7 @@ public class MoveAndRespawn : MonoBehaviour
     public float moveDistance;
     public float moveSpeed;
     public float respawnDelay;
+    public Vector3 moveDirection = Vector3.forward;
 
     private Vector3 startingPosition;
     private float traveledDistance = 0f;
@@ -20,6 +21,7 @@ public class MoveAndRespawn : MonoBehaviour
         startingPosition = transform.position;
 
         objectRenderer = GetComponent<Renderer>();
+        moveDirection = moveDirection.normalized;
     }
 
     void Update()
@@ -29,7 +31,7 @@ public class MoveAndRespawn : MonoBehaviour
 
             float step = moveSpeed * Time.deltaTime;
 
-            transform.Translate(Vector3.forward * step);
+            transform.Translate(moveDirection * step);
             traveledDistance += step;
 
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.SceneManagement;
 public class CarRespawn : MonoBehaviour
 {
     public Transform respawnPoint;
@@ -52,7 +53,7 @@ public class CarRespawn : MonoBehaviour
 
     public void RestartGame()
     {
-
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         gameOverScreen.SetActive(false);
         RespawnCar();
     }

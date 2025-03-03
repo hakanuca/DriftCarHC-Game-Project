@@ -16,7 +16,7 @@ public class CarRespawn : MonoBehaviour
     {
 
         gameOverScreen.SetActive(false);
-        ResetCollectables();
+        // ResetCollectables();
     }
     void OnTriggerEnter(Collider other)
     {
@@ -35,8 +35,9 @@ public class CarRespawn : MonoBehaviour
         transform.rotation = respawnPoint.rotation;
         score = 0;
         scoreText.text = "Score: " + score;
-        ResetCollectables();
+        //ResetCollectables();
     }
+    /*
     void ResetCollectables()
     {
 
@@ -45,6 +46,7 @@ public class CarRespawn : MonoBehaviour
             obj.SetActive(true);
         }
     }
+    */
     void ShowGameOverScreen()
     {
 
@@ -56,6 +58,12 @@ public class CarRespawn : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         gameOverScreen.SetActive(false);
         RespawnCar();
+    }
+    public void ShowMainMenu()
+    {
+        SceneManager.LoadScene("MainMenu");
+        gameOverScreen.SetActive(false);
+
     }
 
 

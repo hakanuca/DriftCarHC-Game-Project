@@ -24,8 +24,8 @@ public class CarController : MonoBehaviour
     public float driftAngleThreshold = 10.0f;
 
     [Header("Drift Effects")]
-    public List<TrailRenderer> tireTrails;
-    public List<ParticleSystem> tireSmoke;
+    public List<TrailRenderer> tireTrails; // Tire trails for drifting effect
+    public List<ParticleSystem> tireSmoke; // Tire smoke for drifting effect
 
     void Start()
     {
@@ -57,7 +57,8 @@ public class CarController : MonoBehaviour
         return Mathf.Abs(GetDriftAngle()) > maxVisualSteeringAngle;
     }
 
-    public bool IsDrifting() {
+    // Checks the car is drifting or not
+    public bool IsDrifting() { 
         return Mathf.Abs(GetDriftAngle()) > driftAngleThreshold;
     }
 
@@ -131,7 +132,7 @@ public class CarController : MonoBehaviour
         return Mathf.Pow(_rb.velocity.magnitude, 2) * drag;
     }
     
-    void HandleDriftEffects()
+    private void HandleDriftEffects()
     {
         bool drifting = IsDrifting();
         foreach (TrailRenderer trail in tireTrails)
@@ -140,7 +141,7 @@ public class CarController : MonoBehaviour
         }
     }
     
-    void HandleDriftSmoke()
+    private void HandleDriftSmoke()
     {
         bool drifting = IsDrifting();
         foreach (ParticleSystem smoke in tireSmoke)
@@ -157,7 +158,4 @@ public class CarController : MonoBehaviour
             }
         }
     }
-
-    
-
 }

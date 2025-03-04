@@ -23,6 +23,9 @@ public class CarController : MonoBehaviour
     private Rigidbody _rb;
     public float driftAngleThreshold = 10.0f;
 
+    [Header("Drift Effects")]
+    public List<TrailRenderer> tireTrails;
+
     void Start()
     {
         _rb = GetComponent<Rigidbody>();
@@ -34,6 +37,9 @@ public class CarController : MonoBehaviour
         float wheelAngle = -Vector3.Angle(_rb.velocity.normalized, GetDriveDirection()) * Vector3.Cross(_rb.velocity.normalized, GetDriveDirection()).y;
         wheelAngle = Mathf.Min(Mathf.Max(-maxVisualSteeringAngle, wheelAngle), maxVisualSteeringAngle);
         PointDriveWheelsAt(wheelAngle);
+        
+        // Enable/Disable trails based on drift
+        HandleDriftEffects();
     }
 
     private float GetRawDriftAngle() {
@@ -122,4 +128,14 @@ public class CarController : MonoBehaviour
     {
         return Mathf.Pow(_rb.velocity.magnitude, 2) * drag;
     }
+    
+    void HandleDriftEffects()
+    {
+        bool drifting = IsDrifting();
+        foreach (TrailRenderer trail in tireTrails)
+        {
+            trail.emitting = drifting;
+        }
+    }
+
 }

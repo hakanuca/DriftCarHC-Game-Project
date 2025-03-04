@@ -25,6 +25,7 @@ public class CarController : MonoBehaviour
 
     [Header("Drift Effects")]
     public List<TrailRenderer> tireTrails;
+    public List<ParticleSystem> tireSmoke;
 
     void Start()
     {
@@ -40,6 +41,7 @@ public class CarController : MonoBehaviour
         
         // Enable/Disable trails based on drift
         HandleDriftEffects();
+        HandleDriftSmoke();
     }
 
     private float GetRawDriftAngle() {
@@ -137,5 +139,25 @@ public class CarController : MonoBehaviour
             trail.emitting = drifting;
         }
     }
+    
+    void HandleDriftSmoke()
+    {
+        bool drifting = IsDrifting();
+        foreach (ParticleSystem smoke in tireSmoke)
+        {
+            if (drifting)
+            {
+                if (!smoke.isPlaying)
+                    smoke.Play();
+            }
+            else
+            {
+                if (smoke.isPlaying)
+                    smoke.Stop();
+            }
+        }
+    }
+
+    
 
 }

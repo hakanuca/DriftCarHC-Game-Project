@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class CarController : MonoBehaviour
 {
+    #region Variables
+
     [Header("Control")]
     public float throttle = 1;
     public float screenUse = 0.8f;  // How much of the screen to use for turning? max turn is when touch at screenUse of screen width
@@ -27,6 +29,13 @@ public class CarController : MonoBehaviour
     public List<TrailRenderer> tireTrails; // Tire trails for drifting effect
     public List<ParticleSystem> tireSmoke; // Tire smoke for drifting effect
 
+    [Header("Braking")]
+    [SerializeField] private float reverseMultiplier = 0.5f; 
+
+    #endregion
+
+    #region UnityFunctions
+
     void Start()
     {
         _rb = GetComponent<Rigidbody>();
@@ -43,40 +52,79 @@ public class CarController : MonoBehaviour
         HandleDriftEffects();
         HandleDriftSmoke();
     }
-
-    private float GetRawDriftAngle() {
-        if (! WheelsGrounded()) return 0;
-        return Vector3.Angle(_rb.velocity.normalized, GetDriveDirection()) * Vector3.Cross(_rb.velocity.normalized, GetDriveDirection()).y;
-    }
-
-    public float GetDriftAngle() {
-        return GetRawDriftAngle();
-    } 
-
-    public bool IsFrontWheelDrift() {
-        return Mathf.Abs(GetDriftAngle()) > maxVisualSteeringAngle;
-    }
-
-    // Checks the car is drifting or not
-    public bool IsDrifting() { 
-        return Mathf.Abs(GetDriftAngle()) > driftAngleThreshold;
-    }
-
+    
     void FixedUpdate()
     {
         // Body
         _rb.centerOfMass = centerOfMass.localPosition;  // Doing each frame allows it to be changed in inspector
         _rb.AddForce(-GetDragForce() * _rb.velocity.normalized);
+        
+        HandleBraking(); // Call the braking system
+        
+        if (TouchInput.braking || isReversing) return; // Prevent forward movement when braking or reversing
 
         // If rear wheels on ground
         if (WheelsGrounded())
         {
             // Engine
             _rb.AddForce(GetDriveDirection() * GetDriveForce());
-
+            
             // Steering
             _rb.angularVelocity += -transform.up * GetSteeringAngularAcceleration() * Time.fixedDeltaTime;
         }
+    }
+
+#endregion
+
+#region CarControlFunctions
+
+
+    private void HandleBraking()
+    {
+        if (TouchInput.braking)
+        {
+            if (_rb.velocity.magnitude > 0.1f)
+            {
+                _rb.AddForce(-_rb.velocity.normalized * GetDriveForce() * 0.5f); // Apply gradual braking force
+            }
+            else
+            {
+                if (!isReversing)
+                {
+                    isReversing = true; // Enable reversing mode
+                }
+            }
+        }
+        else
+        {
+            if (isReversing)
+            {
+                isReversing = false;
+            }
+        }
+
+        if (isReversing && TouchInput.braking)
+        {
+            _rb.AddForce(-GetDriveDirection() * GetDriveForce() * reverseMultiplier); // Move backward using adjustable speed
+        }
+    }
+
+    private bool isReversing = false;
+    
+    private float GetRawDriftAngle() 
+    {
+        if (!WheelsGrounded()) return 0;
+        return Vector3.Angle(_rb.velocity.normalized, GetDriveDirection()) * Vector3.Cross(_rb.velocity.normalized, GetDriveDirection()).y;
+    }
+
+    public float GetDriftAngle() 
+    {
+        return GetRawDriftAngle();
+    } 
+
+    public bool IsDrifting() 
+    { 
+        return Mathf.Abs(GetDriftAngle()) > driftAngleThreshold;
     }
     
     void PointDriveWheelsAt(float targetAngle)
@@ -90,48 +138,42 @@ public class CarController : MonoBehaviour
         }
     }
 
-    /// Are the drive wheels grounded
-    /// Can the car accelerate?
     public bool WheelsGrounded()
     {
         return Physics.OverlapBox(groundTrigger.position, groundTrigger.localScale / 2, Quaternion.identity, wheelCollidables).Length > 0;
     }
 
-    /// How fast do we spin car?
     float GetSteeringAngularAcceleration()
     {
         return GetSteering() * maxAngularAcceleration * Mathf.PI / 180;
     }
 
-    /// How much should we be turning?
-    /// Between -1 and 1
     float GetSteering()
     {
         return TouchInput.steeringValue;
     }
     
-    /// What way car pointing
-    /// Is normalized
     Vector3 GetDriveDirection()
     {
         return _rb.transform.forward.normalized;
     }
 
-    /// How many beans will the car push itself with
-    /// in newtown
     float GetDriveForce()
     {
         return driveForce * throttle;
     }
 
-    /// Magnitude of drag
-    /// velocity squared times drag coefficient
-    /// Uses overall velocity, doesn't care about what direction car pointing
     float GetDragForce()
     {
         return Mathf.Pow(_rb.velocity.magnitude, 2) * drag;
     }
-    
+
+#endregion
+
+
+
+    #region VFXFunctions
+
     private void HandleDriftEffects()
     {
         bool drifting = IsDrifting();
@@ -158,4 +200,6 @@ public class CarController : MonoBehaviour
             }
         }
     }
+
+    #endregion
 }

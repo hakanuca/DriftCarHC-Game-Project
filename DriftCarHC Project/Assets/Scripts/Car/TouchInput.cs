@@ -7,6 +7,7 @@ public class TouchInput : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     public ButtonType buttonType;
     public static float steeringValue = 0f; // -1 (left) to 1 (right)
     public static bool braking = false;
+    
     public void OnPointerDown(PointerEventData eventData)
     {
         if (buttonType == ButtonType.Left)
@@ -17,14 +18,21 @@ public class TouchInput : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         {
             TouchInput.steeringValue = 1f; // Move right
         }
-        /*else if (buttonType == ButtonType.Brake)
+        else if (buttonType == ButtonType.Brake)
         {
             TouchInput.braking = true; 
-        }*/
+        }
     }
 
     public void OnPointerUp(PointerEventData eventData)
     {
-        TouchInput.steeringValue = 0f; // Stop movement when released
+        if (buttonType == ButtonType.Brake)
+        {
+            TouchInput.braking = false; // Reset braking state when released
+        }
+        else
+        {
+            TouchInput.steeringValue = 0f; // Stop movement when released
+        }
     }
 }

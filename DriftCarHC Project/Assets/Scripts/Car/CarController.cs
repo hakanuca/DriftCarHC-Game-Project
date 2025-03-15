@@ -38,8 +38,13 @@ public class CarController : MonoBehaviour
 
     void Start()
     {
+        // Set the frame rate to match the phone's refresh rate
+        Application.targetFrameRate = 120;
         _rb = GetComponent<Rigidbody>();
+        Debug.Log("Refresh Rate: " + Screen.currentResolution.refreshRate);
+
     }
+
 
     void Update()
     {

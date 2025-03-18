@@ -4,7 +4,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UIController : MonoBehaviour
+public class UIControllerSettings : MonoBehaviour
 {
     [SerializeField] Button settingsButton;
     [SerializeField] Button settingsPanelBack;

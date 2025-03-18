@@ -7,7 +7,14 @@ public class TouchInput : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     public ButtonType buttonType;
     public static float steeringValue = 0f; // -1 (left) to 1 (right)
     public static bool braking = false;
-    
+
+    private BlinkingEffect blinkingEffect;
+
+    private void Start()
+    {
+        blinkingEffect = FindObjectOfType<BlinkingEffect>();
+    }
+
     public void OnPointerDown(PointerEventData eventData)
     {
         if (buttonType == ButtonType.Left)
@@ -16,11 +23,12 @@ public class TouchInput : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         }
         else if (buttonType == ButtonType.Right)
         {
-            TouchInput.steeringValue = 1f; 
+            TouchInput.steeringValue = 1f;
         }
         else if (buttonType == ButtonType.Brake)
         {
-            TouchInput.braking = true; 
+            TouchInput.braking = true;
+            blinkingEffect?.StartBlinking();
         }
     }
 
@@ -28,11 +36,12 @@ public class TouchInput : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     {
         if (buttonType == ButtonType.Brake)
         {
-            TouchInput.braking = false; 
+            TouchInput.braking = false;
+            blinkingEffect?.StopBlinking();
         }
         else
         {
-            TouchInput.steeringValue = 0f; 
+            TouchInput.steeringValue = 0f;
         }
     }
 }

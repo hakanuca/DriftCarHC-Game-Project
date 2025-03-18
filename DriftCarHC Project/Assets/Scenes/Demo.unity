@@ -3349,10 +3349,6 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 6
       objectReference: {fileID: 0}
-    - target: {fileID: 3307145644046114185, guid: eb54d72e25045e7498c127f912aa4b94, type: 3}
-      propertyPath: m_Name
-      value: LevelTrigger
-      objectReference: {fileID: 0}
     - target: {fileID: 3344878902564122868, guid: eb54d72e25045e7498c127f912aa4b94, type: 3}
       propertyPath: m_LocalPosition.y
       value: -8.91
@@ -3919,13 +3915,9 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
-    - {fileID: 3629044315424688236, guid: eb54d72e25045e7498c127f912aa4b94, type: 3}
     - {fileID: 1591736840589742526, guid: eb54d72e25045e7498c127f912aa4b94, type: 3}
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 3307145644046114185, guid: eb54d72e25045e7498c127f912aa4b94, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1607436593}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: eb54d72e25045e7498c127f912aa4b94, type: 3}
 --- !u!4 &1429378795 stripped
 Transform:
@@ -4342,23 +4334,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 3026846080996098428, guid: e518be1e8d64a7d43b67a8525c18eeaa, type: 3}
   m_PrefabInstance: {fileID: 2109990281}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1607436587 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3307145644046114185, guid: eb54d72e25045e7498c127f912aa4b94, type: 3}
-  m_PrefabInstance: {fileID: 1419667820}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1607436593
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1607436587}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3da35edd44818d84aad747b1b1e375dd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1623806041
 GameObject:
   m_ObjectHideFlags: 0
@@ -8072,6 +8047,18 @@ PrefabInstance:
       objectReference: {fileID: 7871216847790526420}
     - target: {fileID: 5421987111687319910, guid: 0a3ac07e832068b4f867cb63d3ece810, type: 3}
       propertyPath: smoothRotation
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5421987111687319910, guid: 0a3ac07e832068b4f867cb63d3ece810, type: 3}
+      propertyPath: freezeRotationX
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5421987111687319910, guid: 0a3ac07e832068b4f867cb63d3ece810, type: 3}
+      propertyPath: freezeRotationY
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5421987111687319910, guid: 0a3ac07e832068b4f867cb63d3ece810, type: 3}
+      propertyPath: freezeRotationZ
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5421987111687319910, guid: 0a3ac07e832068b4f867cb63d3ece810, type: 3}

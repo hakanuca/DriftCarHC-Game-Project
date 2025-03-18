@@ -21,7 +21,6 @@ public class CarController : MonoBehaviour
     public float maxVisualSteeringAngle = 30;
     public float maxAngularAcceleration = 30;    // degrees per second
     public List<Transform> steeringWheels;
-    public List<Transform> driveWheels;
     private Rigidbody _rb;
     public float driftAngleThreshold = 10.0f;
 
@@ -42,10 +41,8 @@ public class CarController : MonoBehaviour
         Application.targetFrameRate = 120;
         _rb = GetComponent<Rigidbody>();
         Debug.Log("Refresh Rate: " + Screen.currentResolution.refreshRate);
-
     }
-
-
+    
     void Update()
     {
         // Point wheels
@@ -81,7 +78,7 @@ public class CarController : MonoBehaviour
 
 #endregion
 
-#region CarControlFunctions
+    #region CarControlFunctions
 
 
     private void HandleBraking()
@@ -174,8 +171,6 @@ public class CarController : MonoBehaviour
     }
 
 #endregion
-
-
 
     #region VFXFunctions
 

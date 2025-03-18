@@ -8,7 +8,6 @@ public class CarCamera : MonoBehaviour
     public bool smoothRotation = true;
     public bool followBehind = true;
     public float rotationDamping = 10.0f;
-    public Rigidbody carRigidbody;
 
     void FixedUpdate()
     {
@@ -26,6 +25,11 @@ public class CarCamera : MonoBehaviour
             if (direction != Vector3.zero)
             {
                 Quaternion wantedRotation = Quaternion.LookRotation(direction, transform.up);
+                
+                Vector3 eulerRotation = wantedRotation.eulerAngles;
+                eulerRotation.z = 0;  
+                wantedRotation = Quaternion.Euler(eulerRotation);  
+            
                 Camera.main.transform.rotation = Quaternion.Slerp(Camera.main.transform.rotation, wantedRotation, Time.deltaTime * rotationDamping);
             }
         }
@@ -34,4 +38,5 @@ public class CarCamera : MonoBehaviour
             Camera.main.transform.LookAt(transform, transform.up);
         }
     }
+
 }

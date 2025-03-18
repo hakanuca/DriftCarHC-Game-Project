@@ -23,6 +23,8 @@ public class CarController : MonoBehaviour
     public List<Transform> steeringWheels;
     private Rigidbody _rb;
     public float driftAngleThreshold = 10.0f;
+    [SerializeField] private float wheelRotationScalingFactor = 2.0f; 
+
 
     [Header("Drift Effects")]
     public List<TrailRenderer> tireTrails; // Tire trails for drifting effect
@@ -46,7 +48,7 @@ public class CarController : MonoBehaviour
     void Update()
     {
         // Point wheels
-        float wheelAngle = -Vector3.Angle(_rb.velocity.normalized, GetDriveDirection()) * Vector3.Cross(_rb.velocity.normalized, GetDriveDirection()).y;
+        float wheelAngle = Vector3.Angle(_rb.velocity, GetDriveDirection()) * Vector3.Cross(_rb.velocity, GetDriveDirection()).y * wheelRotationScalingFactor;       
         wheelAngle = Mathf.Min(Mathf.Max(-maxVisualSteeringAngle, wheelAngle), maxVisualSteeringAngle);
         PointDriveWheelsAt(wheelAngle);
         

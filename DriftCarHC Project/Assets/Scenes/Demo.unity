@@ -8069,6 +8069,10 @@ PrefabInstance:
       propertyPath: rotationDamping
       value: 10
       objectReference: {fileID: 0}
+    - target: {fileID: 5421987111687319910, guid: 0a3ac07e832068b4f867cb63d3ece810, type: 3}
+      propertyPath: allowZAxisRotation
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6003873839419615726, guid: 0a3ac07e832068b4f867cb63d3ece810, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

@@ -18,6 +18,7 @@ public class CameraMovement : MonoBehaviour
     private float timeElapsed = 0f;
 
     private bool isHomeReverse = true; // Flag to track toggle state
+    private Coroutine moveCoroutine; // Reference to the current movement coroutine
 
     private void Start()
     {
@@ -29,54 +30,49 @@ public class CameraMovement : MonoBehaviour
     // Move to Garage View
     public void MoveToGarageView()
     {
-        if (!isMoving)
-        {
-            StartCoroutine(MoveCamera(garagePosition));
-        }
+        StartNewMovement(garagePosition);
     }
 
     // Move to Levels View
     public void MoveToLevelsView()
     {
-        if (!isMoving)
-        {
-            StartCoroutine(MoveCamera(levelsPosition));
-        }
+        StartNewMovement(levelsPosition);
     }
 
     // Move to Home View
     public void MoveToHomeView()
     {
-        if (!isMoving)
-        {
-            StartCoroutine(MoveCamera(homePosition));
-        }
+        StartNewMovement(homePosition);
     }
 
     // Move to Home Reverse View
     public void MoveToHomeReverseView()
     {
-        if (!isMoving)
-        {
-            StartCoroutine(MoveCamera(homeReversePosition));
-        }
+        StartNewMovement(homeReversePosition);
     }
 
     // Toggle between Home and Home Reverse
     public void ToggleHomeView()
     {
-        if (!isMoving)
+        if (isHomeReverse)
         {
-            if (isHomeReverse)
-            {
-                MoveToHomeReverseView();
-            }
-            else
-            {
-                MoveToHomeView();
-            }
-            isHomeReverse = !isHomeReverse; // Toggle state
+            MoveToHomeReverseView();
         }
+        else
+        {
+            MoveToHomeView();
+        }
+        isHomeReverse = !isHomeReverse; // Toggle state
+    }
+
+    // Start a new movement, stopping any ongoing movement
+    private void StartNewMovement(Transform destination)
+    {
+        if (moveCoroutine != null)
+        {
+            StopCoroutine(moveCoroutine); // Stop the previous movement if it's running
+        }
+        moveCoroutine = StartCoroutine(MoveCamera(destination)); // Start the new movement
     }
 
     private System.Collections.IEnumerator MoveCamera(Transform destination)

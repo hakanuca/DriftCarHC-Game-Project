@@ -10901,7 +10901,6 @@ GameObject:
   - component: {fileID: 1155518616326427936}
   - component: {fileID: 2777171929760037635}
   - component: {fileID: 8270662343478231479}
-  - component: {fileID: 6217825057050075788}
   m_Layer: 0
   m_Name: Car
   m_TagString: Player
@@ -10996,6 +10995,7 @@ MonoBehaviour:
   tireSmoke:
   - {fileID: 7359340069092058907}
   - {fileID: 7798526894546748514}
+  reverseMultiplier: 2
 --- !u!114 &2777171929760037635
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11026,20 +11026,6 @@ MonoBehaviour:
   gameOverScreen: {fileID: 0}
   scoreText: {fileID: 0}
   collectableObjects: []
---- !u!114 &6217825057050075788
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4761314731388740645}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 89cfba0aba725834499aa13fef3a62fd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  roadPrefab:
-  - {fileID: 0}
 --- !u!1 &5553992054186105950
 GameObject:
   m_ObjectHideFlags: 0

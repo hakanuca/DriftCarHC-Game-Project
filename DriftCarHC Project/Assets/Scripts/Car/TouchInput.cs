@@ -12,11 +12,11 @@ public class TouchInput : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     {
         if (buttonType == ButtonType.Left)
         {
-            TouchInput.steeringValue = -1f; // Move left
+            TouchInput.steeringValue = -1f;
         }
         else if (buttonType == ButtonType.Right)
         {
-            TouchInput.steeringValue = 1f; // Move right
+            TouchInput.steeringValue = 1f; 
         }
         else if (buttonType == ButtonType.Brake)
         {
@@ -28,11 +28,11 @@ public class TouchInput : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     {
         if (buttonType == ButtonType.Brake)
         {
-            TouchInput.braking = false; // Reset braking state when released
+            TouchInput.braking = false; 
         }
         else
         {
-            TouchInput.steeringValue = 0f; // Stop movement when released
+            TouchInput.steeringValue = 0f; 
         }
     }
 }

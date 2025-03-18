@@ -3,40 +3,37 @@ using UnityEngine;
 
 public class ProceduralLevelGenerator : MonoBehaviour
 {
-    [SerializeField] private GameObject[] roadPrefab;
-    public static event Action<GameObject> OnRoadExpired;
+    [SerializeField] private GameObject[] roadPrefabs;
     private int roadCounter = 0;
+    [SerializeField] private float roadSpawnOnX = 100;
 
-    private void OnTriggerEnter(Collider other)
+    public static event Action<GameObject> OnRoadExpired;
+
+    public void SpawnNextRoad()
     {
-        if (other.CompareTag("Trigger"))
+        GameObject firstRoad = GameObject.FindWithTag("Level");
+        Vector3 newPosition = firstRoad.transform.position;
+
+        GameObject newRoadPrefab = roadPrefabs[UnityEngine.Random.Range(0, roadPrefabs.Length)];
+
+        newPosition.x += roadSpawnOnX;
+        newPosition.y = 0;
+        newPosition.z = 0;
+        
+        roadCounter++;
+        if (roadCounter % 3 == 0)
         {
-            for (int i = 0; i < roadPrefab.Length; i++)
-            {
-                // Find the endpoint object within the instantiated prefab
-                var endpoint = GameObject.FindWithTag("Endpoint");
-                if (endpoint != null)
-                {
-                    var spawnPosition = endpoint.transform.position;
-                    // Move the instantiated object to the endpoint position
-                    transform.position = spawnPosition;
-                    Instantiate(roadPrefab[i], transform.position, Quaternion.identity);
-                }
-                roadCounter++;
-                if (roadCounter % 3 == 0)
-                {
-                    for (int j = 0; j < roadPrefab.Length; j++)
-                    {
-                        RemoveRoad(roadPrefab[j]);
-                    }
-                }
-            }
+            RemoveOldRoads();
         }
     }
 
-    private static void RemoveRoad(GameObject road)
+    private void RemoveOldRoads()
     {
-        OnRoadExpired?.Invoke(road);
-        Destroy(road);
+        GameObject[] roads = GameObject.FindGameObjectsWithTag("Level");
+        if (roads.Length > 3)
+        {
+            Destroy(roads[0]);
+            OnRoadExpired?.Invoke(roads[0]);
+        }
     }
 }

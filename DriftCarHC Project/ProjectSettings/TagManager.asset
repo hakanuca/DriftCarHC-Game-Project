@@ -8,6 +8,8 @@ TagManager:
   - Collectable
   - Trigger
   - Endpoint
+  - EntryPoint
+  - Level
   layers:
   - Default
   - TransparentFX

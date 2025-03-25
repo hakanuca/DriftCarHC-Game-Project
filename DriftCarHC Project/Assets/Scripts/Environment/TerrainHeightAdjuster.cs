@@ -6,7 +6,8 @@ public class TerrainHeightAdjuster : MonoBehaviour
 {
     public Terrain terrain;
     public GameObject[] staticObjects;
-
+    public float heightAdjustmentStrength = 1.0f; 
+    public float radiusStrength = 10f;
     private string saveFilePath;
 
     private void Awake()
@@ -31,72 +32,75 @@ public class TerrainHeightAdjuster : MonoBehaviour
     }
 
     [ContextMenu("Adjust Terrain Heights")]
-    public void AdjustTerrain()
+
+public void AdjustTerrain()
+{
+    TerrainData terrainData = terrain.terrainData;
+    Vector3 terrainPos = terrain.transform.position;
+    int resolution = terrainData.heightmapResolution;
+    Vector3 terrainSize = terrainData.size;
+
+    if (!File.Exists(saveFilePath))
     {
-        TerrainData terrainData = terrain.terrainData;
-        Vector3 terrainPos = terrain.transform.position;
-        int resolution = terrainData.heightmapResolution;
-        Vector3 terrainSize = terrainData.size;
+        SaveOriginalHeights();  // Auto-save original heights first
+    }
 
-        if (!File.Exists(saveFilePath))
+    foreach (GameObject obj in staticObjects)
+    {
+        Renderer rend = obj.GetComponent<Renderer>();
+        if (rend == null) continue;
+
+        Bounds objBounds = rend.bounds;
+
+        float relativeX = (objBounds.center.x - terrainPos.x) / terrainSize.x;
+        float relativeZ = (objBounds.center.z - terrainPos.z) / terrainSize.z;
+
+        int terrainX = Mathf.RoundToInt(relativeX * (resolution - 1));
+        int terrainZ = Mathf.RoundToInt(relativeZ * (resolution - 1));
+
+        float objSize = Mathf.Max(objBounds.extents.x, objBounds.extents.z);
+        int radius = Mathf.CeilToInt((objSize / terrainSize.x) * resolution * radiusStrength) + 2;  // Adjust radius
+
+        float desiredHeight = Mathf.Clamp((objBounds.min.y - terrainPos.y) / terrainSize.y, 0f, 1f);
+
+        int xStart = Mathf.Clamp(terrainX - radius, 0, resolution - 1);
+        int zStart = Mathf.Clamp(terrainZ - radius, 0, resolution - 1);
+        int xEnd = Mathf.Clamp(terrainX + radius, 0, resolution);
+        int zEnd = Mathf.Clamp(terrainZ + radius, 0, resolution);
+
+        int width = xEnd - xStart;
+        int height = zEnd - zStart;
+
+        float[,] heights = terrainData.GetHeights(xStart, zStart, width, height);
+
+        for (int x = 0; x < width; x++)
         {
-            SaveOriginalHeights();  // Auto-save original heights first
-        }
-
-        foreach (GameObject obj in staticObjects)
-        {
-            Renderer rend = obj.GetComponent<Renderer>();
-            if (rend == null) continue;
-
-            Bounds objBounds = rend.bounds;
-
-            float relativeX = (objBounds.center.x - terrainPos.x) / terrainSize.x;
-            float relativeZ = (objBounds.center.z - terrainPos.z) / terrainSize.z;
-
-            int terrainX = Mathf.RoundToInt(relativeX * (resolution - 1));
-            int terrainZ = Mathf.RoundToInt(relativeZ * (resolution - 1));
-
-            float objSize = Mathf.Max(objBounds.extents.x, objBounds.extents.z);
-            int radius = Mathf.CeilToInt((objSize / terrainSize.x) * resolution) + 2;
-
-            float desiredHeight = Mathf.Clamp((objBounds.min.y - terrainPos.y) / terrainSize.y, 0f, 1f);
-
-            int xStart = Mathf.Clamp(terrainX - radius, 0, resolution - 1);
-            int zStart = Mathf.Clamp(terrainZ - radius, 0, resolution - 1);
-            int xEnd = Mathf.Clamp(terrainX + radius, 0, resolution);
-            int zEnd = Mathf.Clamp(terrainZ + radius, 0, resolution);
-
-            int width = xEnd - xStart;
-            int height = zEnd - zStart;
-
-            float[,] heights = terrainData.GetHeights(xStart, zStart, width, height);
-
-            for (int x = 0; x < width; x++)
+            for (int z = 0; z < height; z++)
             {
-                for (int z = 0; z < height; z++)
-                {
-                    float distX = (x + xStart - terrainX);
-                    float distZ = (z + zStart - terrainZ);
-                    float distance = Mathf.Sqrt(distX * distX + distZ * distZ);
+                float distX = (x + xStart - terrainX);
+                float distZ = (z + zStart - terrainZ);
+                float distance = Mathf.Sqrt(distX * distX + distZ * distZ);
 
-                    if (distance <= radius)
-                    {
-                        float smoothing = Mathf.SmoothStep(0, 1, distance / radius);
-                        float targetHeight = Mathf.Lerp(desiredHeight, heights[z, x], smoothing);
-                        heights[z, x] = Mathf.Min(heights[z, x], targetHeight);
-                    }
+                if (distance <= radius)
+                {
+                    float smoothing = Mathf.SmoothStep(0, 1, distance / radius) * heightAdjustmentStrength;
+                    float targetHeight = Mathf.Lerp(desiredHeight, heights[z, x], smoothing);
+                    heights[z, x] = Mathf.Min(heights[z, x], targetHeight);
                 }
             }
-
-            terrainData.SetHeights(xStart, zStart, heights);
         }
 
-        terrain.Flush();
-#if UNITY_EDITOR
-        UnityEditor.EditorUtility.SetDirty(terrainData);
-#endif
-        Debug.Log("Terrain adjustments complete.");
+        terrainData.SetHeights(xStart, zStart, heights);
     }
+
+    terrain.Flush();
+#if UNITY_EDITOR
+    UnityEditor.EditorUtility.SetDirty(terrainData);
+#endif
+    Debug.Log("Terrain adjustments complete.");
+}
+
+
 
     [ContextMenu("Reset Terrain Heights")]
     public void ResetTerrain()

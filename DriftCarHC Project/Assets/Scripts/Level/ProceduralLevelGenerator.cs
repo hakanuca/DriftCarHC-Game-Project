@@ -1,39 +1,58 @@
-using System;
 using UnityEngine;
 
 public class ProceduralLevelGenerator : MonoBehaviour
 {
-    [SerializeField] private GameObject[] roadPrefabs;
-    private int roadCounter = 0;
-    [SerializeField] private float roadSpawnOnX = 100;
-    private float lastRoadXPosition = 0;
+    [SerializeField] private MapPoolManager mapPool;
+    private Transform lastEndPoint;
 
-    public static event Action<GameObject> OnRoadExpired;
+    private int mapCounter = 0;
 
-    public void SpawnNextRoad()
+    public void SpawnNextMap()
     {
-        GameObject newRoadPrefab = roadPrefabs[UnityEngine.Random.Range(0, roadPrefabs.Length)];
-        GameObject newRoad = Instantiate(newRoadPrefab);
+        GameObject newMap = mapPool.GetPooledMap();
 
-        Vector3 newPosition = new Vector3(lastRoadXPosition + roadSpawnOnX, 0, 0);
-        newRoad.transform.position = newPosition;
+        Transform startPoint = newMap.transform.Find("StartPoint");
+        Transform endPoint = newMap.transform.Find("EndPoint");
 
-        lastRoadXPosition = newPosition.x;
-
-        roadCounter++;
-        if (roadCounter % 3 == 0)
+        if (startPoint == null || endPoint == null)
         {
-            RemoveOldRoads();
+            Debug.LogError("StartPoint or EndPoint not found in map prefab!");
+            return;
+        }
+
+        Vector3 offset = Vector3.zero;
+
+        if (lastEndPoint != null)
+        {
+            // Align newMap’s StartPoint with the previous map’s EndPoint
+            offset = lastEndPoint.position - startPoint.position;
+        }
+
+        newMap.transform.position += offset;
+
+        // Ensure only X-axis movement (flat level)
+        Vector3 correctedPos = newMap.transform.position;
+        correctedPos.y = 0f;
+        correctedPos.z = 0f;
+        newMap.transform.position = correctedPos;
+
+        lastEndPoint = endPoint;
+
+        mapCounter++;
+        if (mapCounter % 3 == 0)
+        {
+            DeactivateOldMaps();
         }
     }
 
-    private void RemoveOldRoads()
+
+
+    private void DeactivateOldMaps()
     {
-        GameObject[] roads = GameObject.FindGameObjectsWithTag("Level");
-        if (roads.Length > 3)
+        GameObject[] maps = GameObject.FindGameObjectsWithTag("Level");
+        if (maps.Length > 3)
         {
-            Destroy(roads[0]);
-            OnRoadExpired?.Invoke(roads[0]);
+            maps[0].SetActive(false);
         }
     }
 }

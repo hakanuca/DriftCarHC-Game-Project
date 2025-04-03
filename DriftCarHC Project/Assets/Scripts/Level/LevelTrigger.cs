@@ -13,7 +13,7 @@ public class LevelTrigger : MonoBehaviour
     {
         if (other.transform.root.CompareTag("Player")) 
         {
-            levelGenerator.SpawnNextRoad();
+            levelGenerator.SpawnNextMap();
         }
     }
 }

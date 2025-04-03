@@ -2563,7 +2563,6 @@ GameObject:
   - component: {fileID: 475695409}
   - component: {fileID: 475695408}
   - component: {fileID: 475695412}
-  - component: {fileID: 475695413}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -2695,27 +2694,15 @@ MonoBehaviour:
   settingsPanel: {fileID: 111015614}
   settingsButtonClosePosition: {fileID: 1869728057}
   settingsButtonOpenPosition: {fileID: 2068132605}
-  settingsPanelOpenPosition: {fileID: 2136862464}
-  settingsPanelClosePosition: {fileID: 479831690}
---- !u!114 &475695413
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 475695407}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7ce4793785dc9a244bc307d4d0ea58f9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  settingsPanelClosePosition: {fileID: 2136862464}
+  settingsPanelOpenPosition: {fileID: 479831690}
   coinButton: {fileID: 716734632}
   coinPanelBack: {fileID: 477367033}
   coinPanel: {fileID: 1868569023}
   coinButtonClosePosition: {fileID: 1226495450}
   coinButtonOpenPosition: {fileID: 400851207}
-  coinPanelOpenPosition: {fileID: 2124669525}
-  coinPanelClosePosition: {fileID: 1080784031}
+  coinPanelClosePosition: {fileID: 2124669525}
+  coinPanelOpenPosition: {fileID: 1080784031}
 --- !u!1 &477367031
 GameObject:
   m_ObjectHideFlags: 0

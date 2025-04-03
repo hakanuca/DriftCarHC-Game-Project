@@ -4,9 +4,7 @@ public class ProceduralLevelGenerator : MonoBehaviour
 {
     [SerializeField] private MapPoolManager mapPool;
     private Transform lastEndPoint;
-
-    private int mapCounter = 0;
-
+    
     public void SpawnNextMap()
     {
         GameObject newMap = mapPool.GetPooledMap();
@@ -37,22 +35,6 @@ public class ProceduralLevelGenerator : MonoBehaviour
         newMap.transform.position = correctedPos;
 
         lastEndPoint = endPoint;
-
-        mapCounter++;
-        if (mapCounter % 3 == 0)
-        {
-            DeactivateOldMaps();
-        }
     }
-
-
-
-    private void DeactivateOldMaps()
-    {
-        GameObject[] maps = GameObject.FindGameObjectsWithTag("Level");
-        if (maps.Length > 3)
-        {
-            maps[0].SetActive(false);
-        }
-    }
+    
 }

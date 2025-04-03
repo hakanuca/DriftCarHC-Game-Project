@@ -82,7 +82,6 @@ public class CarController : MonoBehaviour
 
     #region CarControlFunctions
 
-
     private void HandleBraking()
     {
         if (TouchInput.braking)

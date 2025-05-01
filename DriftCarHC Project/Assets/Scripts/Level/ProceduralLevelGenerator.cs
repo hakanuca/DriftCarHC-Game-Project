@@ -8,7 +8,7 @@ public class ProceduralLevelGenerator : MonoBehaviour
 {
     [SerializeField] private MapPoolManager mapPool;
     private HashSet<Vector2Int> spawnedTiles = new HashSet<Vector2Int>();
-    private float tileSize = 500f;
+    private float tileSize = 200f;
 
     public void SpawnNextMap(Vector3 playerPosition, Vector3 forward)
     {

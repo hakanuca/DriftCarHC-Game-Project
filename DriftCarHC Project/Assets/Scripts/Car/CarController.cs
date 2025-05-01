@@ -32,6 +32,8 @@ public class CarController : MonoBehaviour
 
     [Header("Braking")]
     [SerializeField] private float reverseMultiplier = 0.5f; 
+    [SerializeField] private float brakingForceMultiplier = 10f; // Tweak this value
+    private bool isReversing = false;
 
     #endregion
 
@@ -42,7 +44,6 @@ public class CarController : MonoBehaviour
         // Set the frame rate to match the phone's refresh rate
         Application.targetFrameRate = 120;
         _rb = GetComponent<Rigidbody>();
-        Debug.Log("Refresh Rate: " + Screen.currentResolution.refreshRate);
     }
     
     void Update()
@@ -84,35 +85,32 @@ public class CarController : MonoBehaviour
 
     private void HandleBraking()
     {
+        float speed = _rb.velocity.magnitude;
+
         if (TouchInput.braking)
         {
-            if (_rb.velocity.magnitude > 0.1f)
+            if (speed > 0.5f && !isReversing)
             {
-                _rb.AddForce(-_rb.velocity.normalized * GetDriveForce() * 0.5f); // Apply gradual braking force
+                // Apply braking force while moving forward
+                Vector3 brakeForce = -_rb.velocity.normalized * brakingForceMultiplier * _rb.mass;
+                _rb.AddForce(brakeForce);
             }
             else
             {
-                if (!isReversing)
-                {
-                    isReversing = true; // Enable reversing mode
-                }
+                // If already slow, go into reverse mode immediately
+                isReversing = true;
+
+                // Apply reverse force
+                Vector3 reverseForce = -GetDriveDirection() * GetDriveForce() * reverseMultiplier * _rb.mass;
+                _rb.AddForce(reverseForce);
             }
         }
         else
         {
-            if (isReversing)
-            {
-                isReversing = false;
-            }
-        }
-
-        if (isReversing && TouchInput.braking)
-        {
-            _rb.AddForce(-GetDriveDirection() * GetDriveForce() * reverseMultiplier); // Move backward using adjustable speed
+            // Reset reverse mode when brake is released
+            isReversing = false;
         }
     }
-
-    private bool isReversing = false;
     
     private float GetRawDriftAngle() 
     {
@@ -130,8 +128,13 @@ public class CarController : MonoBehaviour
         return Mathf.Abs(GetDriftAngle()) > driftAngleThreshold;
     }
     
-    void PointDriveWheelsAt(float targetAngle)
+    private void PointDriveWheelsAt(float targetAngle)
     {
+        if (IsDrifting())
+        {
+            targetAngle = -targetAngle; 
+        }
+
         foreach (Transform wheel in steeringWheels)
         {
             float currentAngle = wheel.localEulerAngles.y;

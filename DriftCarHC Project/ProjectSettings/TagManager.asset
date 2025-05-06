@@ -10,6 +10,7 @@ TagManager:
   - Endpoint
   - EntryPoint
   - Level
+  - Block
   layers:
   - Default
   - TransparentFX

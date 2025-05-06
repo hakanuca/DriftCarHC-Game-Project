@@ -17,11 +17,14 @@ public class ProceduralLevelGenerator : MonoBehaviour
         if (spawnedTiles.Contains(nextGrid)) return;
 
         GameObject newMap = mapPool.GetPooledMap();
-        Vector3 spawnPosition = new Vector3(nextGrid.x * tileSize, 0f, nextGrid.y * tileSize);
+
+        // Snap spawn position to the grid to ensure alignment
+        Vector3 spawnPosition = new Vector3(nextGrid.x * tileSize, 0f, 0f);
         newMap.transform.position = spawnPosition;
 
         spawnedTiles.Add(nextGrid);
     }
+
 
     private Vector2Int GetGridPosition(Vector3 position)
     {
@@ -29,15 +32,4 @@ public class ProceduralLevelGenerator : MonoBehaviour
         int gridZ = Mathf.FloorToInt(position.z / tileSize);
         return new Vector2Int(gridX, gridZ);
     }
-
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.green;
-        foreach (Vector2Int gridPos in spawnedTiles)
-        {
-            Vector3 center = new Vector3(gridPos.x * tileSize, 0f, gridPos.y * tileSize);
-            Gizmos.DrawWireCube(center + new Vector3(tileSize / 2f, 0, tileSize / 2f), new Vector3(tileSize, 0.1f, tileSize));
-        }
-    }
-
 }

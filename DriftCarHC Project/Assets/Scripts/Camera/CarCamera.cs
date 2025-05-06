@@ -25,11 +25,20 @@ public class CarCamera : MonoBehaviour
             if (direction != Vector3.zero)
             {
                 Quaternion wantedRotation = Quaternion.LookRotation(direction, transform.up);
-                
                 Vector3 eulerRotation = wantedRotation.eulerAngles;
-                eulerRotation.z = 0;  
-                wantedRotation = Quaternion.Euler(eulerRotation);  
-            
+
+                // Convert y rotation to signed angle (range -180 to 180)
+                float signedY = eulerRotation.y;
+                if (signedY > 180)
+                    signedY -= 360;
+
+                // Lock y rotation to 0 when below 0; otherwise, proceed normally
+                if (signedY < 0)
+                    eulerRotation.y = 0;
+
+                eulerRotation.z = 0;
+                wantedRotation = Quaternion.Euler(eulerRotation);
+
                 Camera.main.transform.rotation = Quaternion.Slerp(Camera.main.transform.rotation, wantedRotation, Time.deltaTime * rotationDamping);
             }
         }
@@ -38,5 +47,4 @@ public class CarCamera : MonoBehaviour
             Camera.main.transform.LookAt(transform, transform.up);
         }
     }
-
 }

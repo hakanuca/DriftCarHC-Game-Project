@@ -11,7 +11,7 @@ public class ProceduralLevelGenerator : MonoBehaviour
     private float tileSize = 200f;
 
     private Queue<GameObject> activeMaps = new Queue<GameObject>();
-private int maxActiveMaps = 10;
+	private int maxActiveMaps = 10;
 
 public void SpawnNextMap(Vector3 playerPosition, Vector3 forward)
 {

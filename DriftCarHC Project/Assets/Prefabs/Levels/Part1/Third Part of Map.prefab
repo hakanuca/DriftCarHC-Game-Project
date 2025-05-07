@@ -3671,7 +3671,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2045696947369058145, guid: 240b7632f69038b4ab9f1ab34e8ed76f, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -27.624079
+      value: -32.78
       objectReference: {fileID: 0}
     - target: {fileID: 2045696947369058145, guid: 240b7632f69038b4ab9f1ab34e8ed76f, type: 3}
       propertyPath: m_LocalPosition.y
@@ -3679,7 +3679,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2045696947369058145, guid: 240b7632f69038b4ab9f1ab34e8ed76f, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -121.52113
+      value: -126.13
       objectReference: {fileID: 0}
     - target: {fileID: 2045696947369058145, guid: 240b7632f69038b4ab9f1ab34e8ed76f, type: 3}
       propertyPath: m_LocalRotation.w
@@ -3803,7 +3803,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3880379390785070039, guid: 6073979ceda52b34fa22463e3d8b240a, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -126.9
+      value: -137.43
       objectReference: {fileID: 0}
     - target: {fileID: 3880379390785070039, guid: 6073979ceda52b34fa22463e3d8b240a, type: 3}
       propertyPath: m_LocalRotation.w
@@ -6196,7 +6196,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2149436213337772262, guid: 93aa63a5ae8669643a311d52f63e31a3, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -121.76113
+      value: -137.12
       objectReference: {fileID: 0}
     - target: {fileID: 2149436213337772262, guid: 93aa63a5ae8669643a311d52f63e31a3, type: 3}
       propertyPath: m_LocalRotation.w
@@ -6986,6 +6986,10 @@ PrefabInstance:
       propertyPath: m_LocalPosition.z
       value: 0.020833334
       objectReference: {fileID: 0}
+    - target: {fileID: -1910878287049690032, guid: 4bcc0de699f36aa42b75064512337933, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 4bcc0de699f36aa42b75064512337933, type: 3}
       propertyPath: m_Name
       value: road_bendSquare
@@ -6997,13 +7001,42 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: -1910878287049690032, guid: 4bcc0de699f36aa42b75064512337933, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4033063978698532183}
   m_SourcePrefab: {fileID: 100100000, guid: 4bcc0de699f36aa42b75064512337933, type: 3}
 --- !u!4 &3459886292590063514 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 4bcc0de699f36aa42b75064512337933, type: 3}
   m_PrefabInstance: {fileID: 4001805872319662193}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &5976970976192822305 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: -1910878287049690032, guid: 4bcc0de699f36aa42b75064512337933, type: 3}
+  m_PrefabInstance: {fileID: 4001805872319662193}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &4033063978698532183
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5976970976192822305}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 0.02, z: 1}
+  m_Center: {x: 0, y: 0.009999843, z: 0}
 --- !u!1001 &4047248646606724533
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10184,6 +10217,10 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: -1910878287049690032, guid: 4bcc0de699f36aa42b75064512337933, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 4bcc0de699f36aa42b75064512337933, type: 3}
       propertyPath: m_Name
       value: road_bendSquare (1)
@@ -10195,8 +10232,61 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: -1910878287049690032, guid: 4bcc0de699f36aa42b75064512337933, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1466164868760952340}
   m_SourcePrefab: {fileID: 100100000, guid: 4bcc0de699f36aa42b75064512337933, type: 3}
+--- !u!1 &307919922509575637 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: -1910878287049690032, guid: 4bcc0de699f36aa42b75064512337933, type: 3}
+  m_PrefabInstance: {fileID: 7007251219715948933}
+  m_PrefabAsset: {fileID: 0}
+--- !u!61 &1466164868760952340
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 307919922509575637}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0.0000009536743, y: 0.009999843}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 1, y: 0.02}
+  m_EdgeRadius: 0
 --- !u!4 &7400672745352783470 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 4bcc0de699f36aa42b75064512337933, type: 3}

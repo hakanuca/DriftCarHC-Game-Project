@@ -10788,7 +10788,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4761314731388740645}
   serializedVersion: 4
-  m_Mass: 1
+  m_Mass: 50
   m_Drag: 0
   m_AngularDrag: 36
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -10802,7 +10802,7 @@ Rigidbody:
     m_Bits: 0
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
-  m_UseGravity: 0
+  m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
@@ -10819,7 +10819,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a324333404a9a514da776008d6484e18, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  throttle: 2
+  throttle: 15
   screenUse: 0.7
   centerOfMass: {fileID: 4944694702251911181}
   groundTrigger: {fileID: 8385706348931552653}
@@ -10843,7 +10843,8 @@ MonoBehaviour:
   tireSmoke:
   - {fileID: 7359340069092058907}
   - {fileID: 7798526894546748514}
-  reverseMultiplier: 2
+  reverseMultiplier: 0.01
+  brakingForceMultiplier: 10
 --- !u!114 &2777171929760037635
 MonoBehaviour:
   m_ObjectHideFlags: 0

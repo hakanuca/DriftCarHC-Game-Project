@@ -12292,8 +12292,16 @@ PrefabInstance:
       value: construction_barrier
       objectReference: {fileID: 0}
     - target: {fileID: 7383062511522325098, guid: 5a617b9f32e2031499c327d5316beb61, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.1607
+      objectReference: {fileID: 0}
+    - target: {fileID: 7383062511522325098, guid: 5a617b9f32e2031499c327d5316beb61, type: 3}
       propertyPath: m_LocalPosition.y
       value: -0.056
+      objectReference: {fileID: 0}
+    - target: {fileID: 7383062511522325098, guid: 5a617b9f32e2031499c327d5316beb61, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -13899,8 +13907,16 @@ PrefabInstance:
       value: construction_barrier (1)
       objectReference: {fileID: 0}
     - target: {fileID: 7383062511522325098, guid: 5a617b9f32e2031499c327d5316beb61, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.1607
+      objectReference: {fileID: 0}
+    - target: {fileID: 7383062511522325098, guid: 5a617b9f32e2031499c327d5316beb61, type: 3}
       propertyPath: m_LocalPosition.y
       value: -0.06
+      objectReference: {fileID: 0}
+    - target: {fileID: 7383062511522325098, guid: 5a617b9f32e2031499c327d5316beb61, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -14691,7 +14707,10 @@ PrefabInstance:
       value: 98.7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 8863842706803170790, guid: 89d517e4ce6581342b077c4155759252, type: 3}
+    - {fileID: 5977086959554797514, guid: 89d517e4ce6581342b077c4155759252, type: 3}
+    - {fileID: 2390152302096640452, guid: 89d517e4ce6581342b077c4155759252, type: 3}
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 8678929728721654864, guid: 89d517e4ce6581342b077c4155759252, type: 3}
       insertIndex: 1
